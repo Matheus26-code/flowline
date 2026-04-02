@@ -3,6 +3,7 @@ package com.flowline.flowline.service;
 import com.flowline.flowline.dto.PageResponseDTO;
 import com.flowline.flowline.dto.UserResponseDTO;
 import com.flowline.flowline.dto.UserRequestDTO;
+import com.flowline.flowline.exception.ResourceNotFoundException;
 import com.flowline.flowline.model.User;
 import com.flowline.flowline.model.Warehouse;
 import com.flowline.flowline.repository.UserRepository;
@@ -23,10 +24,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final WarehouseRepository warehouseRepository;
 
-    public UserResponseDTO createUser (UserRequestDTO request) {
+    public UserResponseDTO createUser(UserRequestDTO request) {
         User user = new User();
         Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + request.warehouseId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.warehouseId()));
 
         user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
@@ -39,13 +40,13 @@ public class UserService {
                 savedUser.getRole());
     }
 
-    public UserResponseDTO findUserById (Long id) {
+    public UserResponseDTO findUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         return new UserResponseDTO(user.getUsername(), user.getRole());
     }
 
-    public PageResponseDTO<UserResponseDTO> findAllUsers (Pageable pageable) {
+    public PageResponseDTO<UserResponseDTO> findAllUsers(Pageable pageable) {
         Page<UserResponseDTO> page = userRepository.findAll(pageable)
                 .map(user -> new UserResponseDTO(
                         user.getUsername(), user.getRole()));
@@ -58,11 +59,11 @@ public class UserService {
         );
     }
 
-    public UserResponseDTO updateUser (Long id,  UserRequestDTO request) {
+    public UserResponseDTO updateUser(Long id, UserRequestDTO request) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + request.warehouseId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.warehouseId()));
 
         user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
@@ -75,7 +76,7 @@ public class UserService {
                 savedUser.getRole());
     }
 
-    public void deleteUser (Long id) {
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 }

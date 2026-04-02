@@ -3,6 +3,7 @@ package com.flowline.flowline.service;
 import com.flowline.flowline.dto.PageResponseDTO;
 import com.flowline.flowline.dto.WarehouseRequestDTO;
 import com.flowline.flowline.dto.WarehouseResponseDTO;
+import com.flowline.flowline.exception.ResourceNotFoundException;
 import com.flowline.flowline.model.Warehouse;
 import com.flowline.flowline.repository.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class WarehouseService {
 
     public WarehouseResponseDTO findWareById(Long id) {
         Warehouse warehouse = warehouseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + id));
         return new WarehouseResponseDTO(
                 warehouse.getId(),
                 warehouse.getName(),
@@ -72,7 +73,7 @@ public class WarehouseService {
 
     public WarehouseResponseDTO updateWarehouse(Long id, WarehouseRequestDTO warehouseRequestDTO) {
         Warehouse warehouse = warehouseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + id));
         warehouse.setName(warehouseRequestDTO.name());
         warehouse.setDescription(warehouseRequestDTO.description());
         warehouse.setStreet(warehouseRequestDTO.street());
@@ -95,4 +96,3 @@ public class WarehouseService {
         warehouseRepository.deleteById(id);
     }
 }
-

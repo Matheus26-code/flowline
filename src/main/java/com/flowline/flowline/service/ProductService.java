@@ -3,6 +3,7 @@ package com.flowline.flowline.service;
 import com.flowline.flowline.dto.PageResponseDTO;
 import com.flowline.flowline.dto.ProductRequestDTO;
 import com.flowline.flowline.dto.ProductResponseDTO;
+import com.flowline.flowline.exception.ResourceNotFoundException;
 import com.flowline.flowline.model.Product;
 import com.flowline.flowline.model.Warehouse;
 import com.flowline.flowline.repository.ProductRepository;
@@ -22,7 +23,7 @@ public class ProductService {
     public ProductResponseDTO createProduct(ProductRequestDTO request) {
         Product product = new Product();
         Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + request.warehouseId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.warehouseId()));
 
         product.setName(request.name());
         product.setWeight(request.weight());
@@ -41,7 +42,7 @@ public class ProductService {
 
     public ProductResponseDTO findProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         return new ProductResponseDTO(
                 product.getId(),
                 product.getName(),
@@ -71,9 +72,9 @@ public class ProductService {
 
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO request) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + request.warehouseId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.warehouseId()));
         product.setName(request.name());
         product.setWeight(request.weight());
         product.setUnit(request.unit());

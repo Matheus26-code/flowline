@@ -3,6 +3,7 @@ package com.flowline.flowline.service;
 import com.flowline.flowline.dto.OrderRequestDTO;
 import com.flowline.flowline.dto.OrderResponseDTO;
 import com.flowline.flowline.dto.PageResponseDTO;
+import com.flowline.flowline.exception.ResourceNotFoundException;
 import com.flowline.flowline.model.*;
 import com.flowline.flowline.repository.OrderRepository;
 import com.flowline.flowline.repository.ProductRepository;
@@ -26,13 +27,13 @@ public class MovementOrderService {
     public OrderResponseDTO createOrder (OrderRequestDTO request) {
         MovementOrder order = new MovementOrder();
         Sector originSector = sectorRepository.findById(request.originSectorId())
-                .orElseThrow(() -> new RuntimeException("Origin sector not found with id: " + request.originSectorId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Origin sector not found with id: " + request.originSectorId()));
         Sector destinationSector = sectorRepository.findById(request.destinationSectorId())
-                .orElseThrow(() -> new RuntimeException("Destination sector not found with id: " + request.destinationSectorId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Destination sector not found with id: " + request.destinationSectorId()));
         User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + request.userId()));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.userId()));
         Product product = productRepository.findById(request.productId())
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + request.productId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + request.productId()));
 
         order.setOriginSector(originSector);
         order.setDestinationSector(destinationSector);
@@ -55,7 +56,7 @@ public class MovementOrderService {
 
     public OrderResponseDTO findOrderById(Long id) {
         MovementOrder order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
         return new OrderResponseDTO(
                 order.getId(),
                 order.getOriginSector().getId(),
@@ -89,15 +90,15 @@ public class MovementOrderService {
 
     public OrderResponseDTO updateOrder(Long id, OrderRequestDTO request) {
         MovementOrder order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
         Sector originSector = sectorRepository.findById(request.originSectorId())
-                .orElseThrow(() -> new RuntimeException("Origin sector not found with id: " + request.originSectorId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Origin sector not found with id: " + request.originSectorId()));
         Sector destinationSector = sectorRepository.findById(request.destinationSectorId())
-                .orElseThrow(() -> new RuntimeException("Destination sector not found with id: " + request.destinationSectorId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Destination sector not found with id: " + request.destinationSectorId()));
         User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + request.userId()));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.userId()));
         Product product = productRepository.findById(request.productId())
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + request.productId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + request.productId()));
 
         order.setOriginSector(originSector);
         order.setDestinationSector(destinationSector);

@@ -3,6 +3,7 @@ package com.flowline.flowline.service;
 import com.flowline.flowline.dto.PageResponseDTO;
 import com.flowline.flowline.dto.SectorRequestDTO;
 import com.flowline.flowline.dto.SectorResponseDTO;
+import com.flowline.flowline.exception.ResourceNotFoundException;
 import com.flowline.flowline.model.Sector;
 import com.flowline.flowline.model.User;
 import com.flowline.flowline.model.Warehouse;
@@ -25,9 +26,9 @@ public class SectorService {
     public SectorResponseDTO createSector(SectorRequestDTO request) {
         Sector sector = new Sector();
         Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + request.warehouseId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.warehouseId()));
         User user = userRepository.findById(request.responsibleId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + request.responsibleId()));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.responsibleId()));
 
         sector.setName(request.name());
         sector.setBuilding(request.building());
@@ -44,7 +45,7 @@ public class SectorService {
 
     public SectorResponseDTO findSectorById(Long id) {
         Sector sector = sectorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sector not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Sector not found with id: " + id));
         return new SectorResponseDTO(
                 sector.getId(),
                 sector.getName(),
@@ -72,11 +73,11 @@ public class SectorService {
 
     public SectorResponseDTO updateSector(Long id, SectorRequestDTO request) {
         Sector sector = sectorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sector not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Sector not found with id: " + id));
         Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + request.warehouseId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.warehouseId()));
         User user = userRepository.findById(request.responsibleId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + request.responsibleId()));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.responsibleId()));
 
         sector.setName(request.name());
         sector.setBuilding(request.building());
