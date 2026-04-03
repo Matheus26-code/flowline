@@ -1,8 +1,9 @@
 package com.flowline.flowline.controller;
 
-import com.flowline.flowline.dto.LoginRequestDTO;
-import com.flowline.flowline.dto.LoginResponseDTO;
+import com.flowline.flowline.dto.*;
+import com.flowline.flowline.model.UserRole;
 import com.flowline.flowline.security.JwtService;
+import com.flowline.flowline.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
+    private final UserService userService;
     private final JwtService jwtService;
 
     @PostMapping("/login")
@@ -34,5 +36,18 @@ public class AuthController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.email());
         String token = jwtService.generateToken(userDetails);
         return ResponseEntity.ok(new LoginResponseDTO(token));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDTO> register(@RequestBody @Valid RegisterRequestDTO request) {
+        UserRequestDTO userRequest = new UserRequestDTO(
+                request.username(),
+                request.email(),
+                request.password(),
+                UserRole.ADMIN,
+                1L  // warehouseId temporário
+        );
+        UserResponseDTO result = userService.createUser(userRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 }
