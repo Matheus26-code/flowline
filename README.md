@@ -239,6 +239,34 @@ Managed by Flyway. Migrations located at `src/main/resources/db/migration/`.
 
 ---
 
+## 🧪 Testing
+
+This project includes unit tests for the service layer using **JUnit 5** and **Mockito**.
+
+### Running the tests
+```bash
+./gradlew test
+```
+
+### Test coverage
+
+| Service | Tests |
+|---|---|
+| WarehouseService | 6 tests |
+| ProductService | 6 tests |
+| SectorService | 6 tests |
+| UserService | in progress |
+| MovementOrderService | in progress |
+
+**Patterns applied:**
+- `@ExtendWith(MockitoExtension.class)` for isolated unit tests
+- `@Mock` for repository dependencies
+- `@InjectMocks` for the service under test
+- `@BeforeEach` for shared test fixtures
+- `assertThrows` for exception scenario coverage
+- `verify` for void method behavior validation
+
+
 ## 👨‍💻 Author
 
 **Igor Matheus Braz Carvalho** — Back-end Developer

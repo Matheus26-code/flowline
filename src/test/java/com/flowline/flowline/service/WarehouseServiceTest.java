@@ -49,6 +49,7 @@ public class WarehouseServiceTest {
         warehouseRequestDTO = new WarehouseRequestDTO(
                 "Empresa teste mock", "Testando Mock",
                 "rua teste", "Chachoeira", "RS", "000000");
+
     }
 
     @Test
@@ -85,13 +86,6 @@ public class WarehouseServiceTest {
     }
 
     @Test
-    public void mustDeleteWarehouseById() {
-
-        warehouseService.deleteById(1L);
-        verify(warehouseRepository).deleteById(1L);
-    }
-
-    @Test
     public void mustSuccessfullyUpdateWarehouse() {
         when(warehouseRepository.findById(1L)).thenReturn(Optional.of(warehouse));
         when(warehouseRepository.save(any(Warehouse.class))).thenReturn(warehouse);
@@ -114,4 +108,12 @@ public class WarehouseServiceTest {
         assertNotNull(result);
         assertEquals(1, result.content().size());
     }
+
+    @Test
+    public void mustDeleteWarehouseById() {
+
+        warehouseService.deleteById(1L);
+        verify(warehouseRepository).deleteById(1L);
+    }
+
 }
