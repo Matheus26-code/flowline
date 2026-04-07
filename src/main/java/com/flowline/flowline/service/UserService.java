@@ -10,7 +10,7 @@ import com.flowline.flowline.repository.UserRepository;
 import com.flowline.flowline.repository.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
@@ -19,8 +19,7 @@ import org.springframework.data.domain.Pageable;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final WarehouseRepository warehouseRepository;
 
@@ -30,8 +29,8 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.warehouseId()));
 
         user.setUsername(request.username());
-        user.setPassword(passwordEncoder.encode(request.password()));
         user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(request.role());
         user.setWarehouse(warehouse);
         User savedUser = userRepository.save(user);
