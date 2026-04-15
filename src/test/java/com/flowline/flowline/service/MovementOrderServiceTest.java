@@ -76,12 +76,11 @@ public class MovementOrderServiceTest {
         movementOrder.setCreatedAt(LocalDateTime.now());
 
         orderRequestDTO = new OrderRequestDTO(
+                sector.getId(),
+                sector.getId(),
                 user.getId(),
                 product.getId(),
-                sector.getId(),
-                sector.getId(),
-                MovementStatus.PENDING, new BigDecimal("100"),
-                LocalDateTime.now()
+                new BigDecimal("100")
         );
     }
 

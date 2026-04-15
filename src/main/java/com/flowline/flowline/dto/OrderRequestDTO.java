@@ -10,7 +10,5 @@ public record OrderRequestDTO(
        Long destinationSectorId,
        Long userId,
        Long productId,
-       MovementStatus status,
-       BigDecimal quantity,
-       LocalDateTime createdAt
+       BigDecimal quantity
 ) {}

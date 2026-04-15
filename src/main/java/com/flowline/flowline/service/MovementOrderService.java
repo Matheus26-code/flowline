@@ -15,6 +15,8 @@ import org.springframework.data.domain.Page;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class MovementOrderService {
@@ -41,7 +43,7 @@ public class MovementOrderService {
         order.setProduct(product);
         order.setStatus(MovementStatus.PENDING);
         order.setQuantity(request.quantity());
-        order.setCreatedAt(request.createdAt());
+        order.setCreatedAt(LocalDateTime.now());
         MovementOrder savedOrder = orderRepository.save(order);
         return new OrderResponseDTO(
                 savedOrder.getId(),
@@ -104,7 +106,7 @@ public class MovementOrderService {
         order.setDestinationSector(destinationSector);
         order.setUser(user);
         order.setProduct(product);
-        order.setStatus(request.status());
+        order.setStatus(MovementStatus.PENDING);
         order.setQuantity(request.quantity());
         MovementOrder savedOrder = orderRepository.save(order);
         return new OrderResponseDTO(

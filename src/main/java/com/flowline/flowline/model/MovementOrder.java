@@ -42,8 +42,4 @@ public class MovementOrder {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
-
-    public Object getSa() {
-        return null;
-    }
 }
