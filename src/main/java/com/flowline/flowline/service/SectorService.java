@@ -31,6 +31,7 @@ public class SectorService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.responsibleId()));
 
         sector.setName(request.name());
+        sector.setDescription(request.description());
         sector.setBuilding(request.building());
         sector.setWarehouse(warehouse);
         sector.setResponsible(user);
@@ -38,9 +39,10 @@ public class SectorService {
         return new SectorResponseDTO(
                 savedSector.getId(),
                 savedSector.getName(),
+                savedSector.getDescription(),
                 savedSector.getBuilding(),
-                savedSector.getResponsible().getId(),
-                savedSector.getWarehouse().getId());
+                savedSector.getWarehouse().getId(),
+                savedSector.getResponsible().getId());
     }
 
     public SectorResponseDTO findSectorById(Long id) {
@@ -49,6 +51,7 @@ public class SectorService {
         return new SectorResponseDTO(
                 sector.getId(),
                 sector.getName(),
+                sector.getDescription(),
                 sector.getBuilding(),
                 sector.getResponsible().getId(),
                 sector.getWarehouse().getId());
@@ -59,6 +62,7 @@ public class SectorService {
                 .map(sector -> new SectorResponseDTO(
                         sector.getId(),
                         sector.getName(),
+                        sector.getDescription(),
                         sector.getBuilding(),
                         sector.getResponsible().getId(),
                         sector.getWarehouse().getId()));
@@ -80,6 +84,7 @@ public class SectorService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.responsibleId()));
 
         sector.setName(request.name());
+        sector.setDescription(request.description());
         sector.setBuilding(request.building());
         sector.setWarehouse(warehouse);
         sector.setResponsible(user);
@@ -87,6 +92,7 @@ public class SectorService {
         return new SectorResponseDTO(
                 savedSector.getId(),
                 savedSector.getName(),
+                savedSector.getDescription(),
                 savedSector.getBuilding(),
                 savedSector.getResponsible().getId(),
                 savedSector.getWarehouse().getId());

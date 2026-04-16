@@ -22,7 +22,7 @@ public class SectorController {
     private final SectorService sectorService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<SectorResponseDTO> createSector(
             @RequestBody @Valid SectorRequestDTO request) {
         SectorResponseDTO result = sectorService.createSector(request);
@@ -30,14 +30,14 @@ public class SectorController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<SectorResponseDTO> getSectorById(@PathVariable Long id) {
         SectorResponseDTO result = sectorService.findSectorById(id);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<PageResponseDTO<SectorResponseDTO>> getAllSectors(
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         PageResponseDTO<SectorResponseDTO> result = sectorService.findAllSectors(pageable);
@@ -45,7 +45,7 @@ public class SectorController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<SectorResponseDTO> updateSector(
             @PathVariable Long id, @RequestBody @Valid SectorRequestDTO request) {
         SectorResponseDTO result = sectorService.updateSector(id, request);
@@ -53,7 +53,7 @@ public class SectorController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<Void> deleteSector(@PathVariable Long id) {
         sectorService.deleteById(id);
         return ResponseEntity.noContent().build();

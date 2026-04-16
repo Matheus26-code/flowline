@@ -35,20 +35,20 @@ public class UserService {
         user.setWarehouse(warehouse);
         User savedUser = userRepository.save(user);
         return new UserResponseDTO(
-                savedUser.getUsername(),
+                savedUser.getName(),
                 savedUser.getRole());
     }
 
     public UserResponseDTO findUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        return new UserResponseDTO(user.getUsername(), user.getRole());
+        return new UserResponseDTO(user.getName(), user.getRole());
     }
 
     public PageResponseDTO<UserResponseDTO> findAllUsers(Pageable pageable) {
         Page<UserResponseDTO> page = userRepository.findAll(pageable)
                 .map(user -> new UserResponseDTO(
-                        user.getUsername(), user.getRole()));
+                        user.getName(), user.getRole()));
         return new PageResponseDTO<>(
                 page.getContent(),
                 page.getTotalPages(),
@@ -71,7 +71,7 @@ public class UserService {
         user.setWarehouse(warehouse);
         User savedUser = userRepository.save(user);
         return new UserResponseDTO(
-                savedUser.getUsername(),
+                savedUser.getName(),
                 savedUser.getRole());
     }
 

@@ -6,6 +6,7 @@ import com.flowline.flowline.model.Warehouse;
 public record SectorResponseDTO(
         Long id,
         String name,
+        String description,
         String building,
         Long responsibleId,
         Long warehouseId

@@ -60,12 +60,14 @@ public class SectorServiceTest {
 
         sector = new Sector();
         sector.setName("Sector mock");
+        sector.setDescription("test");
         sector.setBuilding("Sector building");
         sector.setResponsible(user);
         sector.setWarehouse(warehouse);
 
         sectorRequestDTO = new SectorRequestDTO(
-                "Sector mock", "Sector description", 1L, 1L);
+                "Sector mock","test", "Sector building",
+                1L, 1L);
     }
 
     @Test
