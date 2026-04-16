@@ -1,9 +1,13 @@
 package com.flowline.flowline.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public record SectorRequestDTO(
-        String name,
-        String description,
+        @NotBlank String name,
+        @NotBlank String description,
         String building,
-        Long responsibleId,
-        Long warehouseId
-) {}
+        @NotNull Long responsibleId,
+        @NotNull Long warehouseId
+) {
+}
