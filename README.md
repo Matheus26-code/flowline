@@ -10,11 +10,11 @@ Built from a real operational background in automotive manufacturing (GKN Automo
 
 ## 🚀 Live Demo
 
-**API Base URL:** `https://flowline-production.up.railway.app`
+> 🚧 **Deploy coming soon.** The API will be publicly available shortly.
 
-**Swagger Documentation:** `https://flowline-production.up.railway.app/swagger-ui/index.html`
+**Swagger Documentation** will be available at the production URL once deployed.
 
-> All endpoints except `/api/auth/login` require a Bearer Token. Use the login endpoint to obtain one.
+> All endpoints except `/api/auth/login` require a Bearer Token.
 
 ---
 
@@ -31,7 +31,6 @@ Built from a real operational background in automotive manufacturing (GKN Automo
 | Containerization | Docker + Docker Compose |
 | Build Tool | Gradle |
 | Documentation | SpringDoc OpenAPI (Swagger) |
-| Deployment | Railway |
 | Utilities | Lombok |
 
 ---
@@ -39,8 +38,6 @@ Built from a real operational background in automotive manufacturing (GKN Automo
 ## 🏗️ Architecture
 
 This project follows a **layered architecture** with clear separation of concerns:
-
-```
 com.flowline.flowline
 ├── config          # Spring Security configuration
 ├── controller      # HTTP layer — receives requests, delegates to service
@@ -51,7 +48,6 @@ com.flowline.flowline
 ├── repository      # Data access layer — communicates with the database
 ├── security        # JWT filter, token service, UserDetails implementation
 └── service         # Business logic layer — rules and orchestration
-```
 
 **Key architectural decisions:**
 
@@ -61,24 +57,21 @@ com.flowline.flowline
 - **Flyway migrations** — versioned schema management, safe for production environments
 - **Spring Profiles** — separate configurations for `dev` and `prod` environments
 - **JWT stateless authentication** — no server-side session storage, horizontally scalable
+- **Bean Validation** — input validation on all request DTOs with meaningful error responses
 
 ---
 
 ## 📊 Domain Model
-
-```
 Warehouse (root entity — represents a company/factory)
-  └── Sector       (physical area within the warehouse)
-  └── Product      (material catalog, per warehouse)
-  └── User         (operator, manager, or admin)
-
+└── Sector       (physical area within the warehouse)
+└── Product      (material catalog, per warehouse)
+└── User         (operator, manager, or admin)
 MovementOrder      (tracks material movement between sectors)
-  └── originSector
-  └── destinationSector
-  └── product
-  └── createdBy (User)
-  └── status: PENDING | DELIVERING | DELIVERED | CANCELLED
-```
+└── originSector
+└── destinationSector
+└── product
+└── createdBy (User)
+└── status: PENDING | DELIVERING | DELIVERED | CANCELLED
 
 ---
 
@@ -134,22 +127,32 @@ MovementOrder      (tracks material movement between sectors)
 | `PUT` | `/api/orders/{id}` | Update order |
 | `DELETE` | `/api/orders/{id}` | Delete order |
 
+### Dashboard
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| `GET` | `/api/dashboard` | Aggregated operational metrics | ADMIN, MANAGE |
+
+**Dashboard response includes:**
+- Total orders and breakdown by status (PENDING, DELIVERING, DELIVERED, CANCELLED)
+- Orders created today
+- Products delivered today
+- Total products and users registered
+
 ---
 
 ## 🔐 Authentication Flow
 
-```
-1. POST /api/auth/login → { email, password }
-2. Server returns → { token: "eyJhbGci..." }
-3. Include in all requests → Authorization: Bearer <token>
-4. Token expires after 24 hours
-```
+POST /api/auth/login → { email, password }
+Server returns → { token: "eyJhbGci..." }
+Include in all requests → Authorization: Bearer <token>
+Token expires after 24 hours
+
 
 ### User Roles
 | Role | Description |
 |---|---|
 | `ADMIN` | Full system access |
-| `MANAGER` | Can update/cancel any movement order |
+| `MANAGE` | Can update/cancel orders, manage users and sectors |
 | `OPERATOR` | Creates and executes movement orders |
 | `ASSISTANT` | Read-only access |
 
@@ -181,10 +184,7 @@ spring.datasource.password=your_password
 ```
 
 Create `.env` in the project root:
-
-```
 POSTGRES_PASSWORD=your_password
-```
 
 > ⚠️ Both files are listed in `.gitignore` and will never be committed.
 
@@ -206,7 +206,7 @@ Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 
 ---
 
-## 🧪 Database Schema
+## 🗄️ Database Schema
 
 Managed by Flyway. Migrations located at `src/main/resources/db/migration/`.
 
@@ -244,6 +244,7 @@ Managed by Flyway. Migrations located at `src/main/resources/db/migration/`.
 This project includes unit tests for the service layer using **JUnit 5** and **Mockito**.
 
 ### Running the tests
+
 ```bash
 ./gradlew test
 ```
@@ -255,8 +256,9 @@ This project includes unit tests for the service layer using **JUnit 5** and **M
 | WarehouseService | 6 tests |
 | ProductService | 6 tests |
 | SectorService | 6 tests |
-| UserService | in progress |
-| MovementOrderService | in progress |
+| UserService | 6 tests |
+| MovementOrderService | 6 tests |
+| **Total** | **30 tests** |
 
 **Patterns applied:**
 - `@ExtendWith(MockitoExtension.class)` for isolated unit tests
@@ -266,6 +268,7 @@ This project includes unit tests for the service layer using **JUnit 5** and **M
 - `assertThrows` for exception scenario coverage
 - `verify` for void method behavior validation
 
+---
 
 ## 👨‍💻 Author
 
