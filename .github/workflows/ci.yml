@@ -44,3 +44,4 @@ jobs:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5433/flowline
           SPRING_DATASOURCE_USERNAME: mathe
           SPRING_DATASOURCE_PASSWORD: testpassword
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
