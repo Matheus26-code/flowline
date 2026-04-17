@@ -35,20 +35,32 @@ public class UserService {
         user.setWarehouse(warehouse);
         User savedUser = userRepository.save(user);
         return new UserResponseDTO(
+                savedUser.getId(),
                 savedUser.getName(),
-                savedUser.getRole());
+                savedUser.getEmail(),
+                savedUser.getRole(),
+                savedUser.getWarehouse().getId());
     }
 
     public UserResponseDTO findUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        return new UserResponseDTO(user.getName(), user.getRole());
+        return new UserResponseDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole(),
+                user.getWarehouse().getId());
     }
 
     public PageResponseDTO<UserResponseDTO> findAllUsers(Pageable pageable) {
         Page<UserResponseDTO> page = userRepository.findAll(pageable)
                 .map(user -> new UserResponseDTO(
-                        user.getName(), user.getRole()));
+                        user.getId(),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getRole(),
+                        user.getWarehouse().getId()));
         return new PageResponseDTO<>(
                 page.getContent(),
                 page.getTotalPages(),
@@ -71,8 +83,11 @@ public class UserService {
         user.setWarehouse(warehouse);
         User savedUser = userRepository.save(user);
         return new UserResponseDTO(
+                savedUser.getId(),
                 savedUser.getName(),
-                savedUser.getRole());
+                savedUser.getEmail(),
+                savedUser.getRole(),
+                savedUser.getWarehouse().getId());
     }
 
     public void deleteUser(Long id) {

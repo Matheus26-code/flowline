@@ -61,7 +61,8 @@ public class UserServiceTest {
         user.setWarehouse(warehouse);
 
         userRequestDTO = new UserRequestDTO(
-                "User mock", "email mock", "Password mock", UserRole.ADMIN, warehouse.getId()
+                "User mock", "email mock", "Password mock",
+                UserRole.ADMIN, warehouse.getId()
         );
     }
 
