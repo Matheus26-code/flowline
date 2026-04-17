@@ -22,7 +22,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<UserResponseDTO> create (
             @RequestBody @Valid UserRequestDTO request) {
         UserResponseDTO result = userService.createUser(request);
@@ -30,14 +30,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<UserResponseDTO> getUserById (@PathVariable long id) {
         UserResponseDTO result = userService.findUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<PageResponseDTO<UserResponseDTO>> getAllUsers(
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         PageResponseDTO<UserResponseDTO> result = userService.findAllUsers(pageable);
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<UserResponseDTO> updateUser (
             @PathVariable long id, @Valid @RequestBody UserRequestDTO request) {
         UserResponseDTO result = userService.updateUser(id, request);
@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<Void> deleteUser (@PathVariable long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();

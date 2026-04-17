@@ -20,21 +20,21 @@ public class MovementOrderController {
     private final MovementOrderService movementOrderService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'OPERATOR', 'ASSISTANT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE', 'OPERATOR', 'ASSISTANT')")
     public ResponseEntity<OrderResponseDTO> createProduct(@RequestBody @Valid OrderRequestDTO request) {
         OrderResponseDTO result = movementOrderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'OPERATOR', 'ASSISTANT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE', 'OPERATOR', 'ASSISTANT')")
     public ResponseEntity<OrderResponseDTO> getOrderById(@PathVariable Long id) {
         OrderResponseDTO result = movementOrderService.findOrderById(id);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'OPERATOR', 'ASSISTANT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE', 'OPERATOR', 'ASSISTANT')")
     public ResponseEntity<PageResponseDTO<OrderResponseDTO>> getAllOrders(
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         PageResponseDTO<OrderResponseDTO> result = movementOrderService.findAllOrders(pageable);
@@ -42,7 +42,7 @@ public class MovementOrderController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<OrderResponseDTO> updateOrder(
             @PathVariable Long id, @RequestBody @Valid OrderRequestDTO request) {
         OrderResponseDTO result = movementOrderService.updateOrder(id, request);
@@ -50,7 +50,7 @@ public class MovementOrderController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<Void> deleteOrderById(@PathVariable Long id) {
         movementOrderService.deleteOrderById(id);
         return ResponseEntity.noContent().build();

@@ -32,7 +32,7 @@ public class WarehouseController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
     public ResponseEntity<WarehouseResponseDTO> getWarehouseById (
             @PathVariable Long id,
             @AuthenticationPrincipal User loggedUser) {
