@@ -26,39 +26,26 @@ public class MovementOrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
-    public OrderResponseDTO createOrder (OrderRequestDTO request) {
-        MovementOrder order = new MovementOrder();
-        Sector originSector = sectorRepository.findById(request.originSectorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Origin sector not found with id: " + request.originSectorId()));
-        Sector destinationSector = sectorRepository.findById(request.destinationSectorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Destination sector not found with id: " + request.destinationSectorId()));
-        User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.userId()));
-        Product product = productRepository.findById(request.productId())
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + request.productId()));
+    private record OrderDependencies(
+            Sector originSector,
+            Sector destinationSector,
+            User user,
+            Product product
+    ) {}
 
-        order.setOriginSector(originSector);
-        order.setDestinationSector(destinationSector);
-        order.setUser(user);
-        order.setProduct(product);
-        order.setStatus(MovementStatus.PENDING);
-        order.setQuantity(request.quantity());
-        order.setCreatedAt(LocalDateTime.now());
-        MovementOrder savedOrder = orderRepository.save(order);
-        return new OrderResponseDTO(
-                savedOrder.getId(),
-                savedOrder.getOriginSector().getId(),
-                savedOrder.getDestinationSector().getId(),
-                savedOrder.getUser().getId(),
-                savedOrder.getProduct().getId(),
-                savedOrder.getStatus(),
-                savedOrder.getQuantity(),
-                savedOrder.getCreatedAt());
+    private OrderDependencies resolveDependencies(OrderRequestDTO request) {
+        Sector originSector = sectorRepository.findById(request.originSectorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Sector not found"));
+        Sector destinationSector = sectorRepository.findById(request.destinationSectorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Sector not found"));
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Product product = productRepository.findById(request.productId())
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        return new OrderDependencies(originSector, destinationSector, user, product);
     }
 
-    public OrderResponseDTO findOrderById(Long id) {
-        MovementOrder order = orderRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
+    private OrderResponseDTO toResponseDTO(MovementOrder order) {
         return new OrderResponseDTO(
                 order.getId(),
                 order.getOriginSector().getId(),
@@ -70,17 +57,29 @@ public class MovementOrderService {
                 order.getCreatedAt());
     }
 
+    public OrderResponseDTO createOrder (OrderRequestDTO request) {
+        OrderDependencies deps = resolveDependencies(request);
+        MovementOrder order = new MovementOrder();
+
+        order.setOriginSector(deps.originSector);
+        order.setDestinationSector(deps.destinationSector);
+        order.setUser(deps.user);
+        order.setProduct(deps.product);
+        order.setStatus(MovementStatus.PENDING);
+        order.setQuantity(request.quantity());
+        order.setCreatedAt(LocalDateTime.now());
+        return toResponseDTO(orderRepository.save(order));
+    }
+
+    public OrderResponseDTO findOrderById(Long id) {
+        MovementOrder order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
+        return toResponseDTO(order);
+    }
+
     public PageResponseDTO<OrderResponseDTO> findAllOrders(Pageable pageable) {
         Page<OrderResponseDTO> page = orderRepository.findAll(pageable)
-                .map(order -> new OrderResponseDTO(
-                        order.getId(),
-                        order.getOriginSector().getId(),
-                        order.getDestinationSector().getId(),
-                        order.getUser().getId(),
-                        order.getProduct().getId(),
-                        order.getStatus(),
-                        order.getQuantity(),
-                        order.getCreatedAt()));
+                .map(this::toResponseDTO);
         return new PageResponseDTO<>(
                 page.getContent(),
                 page.getTotalPages(),
@@ -91,33 +90,17 @@ public class MovementOrderService {
     }
 
     public OrderResponseDTO updateOrder(Long id, OrderRequestDTO request) {
+        OrderDependencies deps = resolveDependencies(request);
         MovementOrder order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
-        Sector originSector = sectorRepository.findById(request.originSectorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Origin sector not found with id: " + request.originSectorId()));
-        Sector destinationSector = sectorRepository.findById(request.destinationSectorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Destination sector not found with id: " + request.destinationSectorId()));
-        User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.userId()));
-        Product product = productRepository.findById(request.productId())
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + request.productId()));
 
-        order.setOriginSector(originSector);
-        order.setDestinationSector(destinationSector);
-        order.setUser(user);
-        order.setProduct(product);
+        order.setOriginSector(deps.originSector);
+        order.setDestinationSector(deps.destinationSector);
+        order.setUser(deps.user);
+        order.setProduct(deps.product);
         order.setStatus(MovementStatus.PENDING);
         order.setQuantity(request.quantity());
-        MovementOrder savedOrder = orderRepository.save(order);
-        return new OrderResponseDTO(
-                savedOrder.getId(),
-                savedOrder.getOriginSector().getId(),
-                savedOrder.getDestinationSector().getId(),
-                savedOrder.getUser().getId(),
-                savedOrder.getProduct().getId(),
-                savedOrder.getStatus(),
-                savedOrder.getQuantity(),
-                savedOrder.getCreatedAt());
+        return toResponseDTO(orderRepository.save(order));
     }
 
     public void deleteOrderById(Long id) {
