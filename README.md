@@ -10,11 +10,21 @@ Built from a real operational background in automotive manufacturing (GKN Automo
 
 ## 🚀 Live Demo
 
-> 🚧 **Deploy coming soon.** The API will be publicly available shortly.
+**Base URL:** `https://flowline-nf81.onrender.com`
 
-**Swagger Documentation** will be available at the production URL once deployed.
+> ⚠️ Hosted on Render free tier — the first request may take up to 50 seconds to wake the service.
 
-> All endpoints except `/api/auth/login` require a Bearer Token.
+### Quick test via curl
+
+```bash
+curl -X POST https://flowline-nf81.onrender.com/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@flowline.com","password":"Admin@2025"}'
+```
+
+**Swagger UI:** `https://flowline-nf81.onrender.com/swagger-ui/index.html`
+
+> All endpoints except `POST /api/auth/login` require a Bearer Token.
 
 ---
 
@@ -31,6 +41,7 @@ Built from a real operational background in automotive manufacturing (GKN Automo
 | Containerization | Docker + Docker Compose |
 | Build Tool | Gradle |
 | Documentation | SpringDoc OpenAPI (Swagger) |
+| AI Integration | Spring AI 1.0.0 + Anthropic Claude |
 | Utilities | Lombok |
 
 ---
@@ -38,6 +49,8 @@ Built from a real operational background in automotive manufacturing (GKN Automo
 ## 🏗️ Architecture
 
 This project follows a **layered architecture** with clear separation of concerns:
+
+```
 com.flowline.flowline
 ├── config          # Spring Security configuration
 ├── controller      # HTTP layer — receives requests, delegates to service
@@ -48,6 +61,7 @@ com.flowline.flowline
 ├── repository      # Data access layer — communicates with the database
 ├── security        # JWT filter, token service, UserDetails implementation
 └── service         # Business logic layer — rules and orchestration
+```
 
 **Key architectural decisions:**
 
@@ -62,16 +76,20 @@ com.flowline.flowline
 ---
 
 ## 📊 Domain Model
+
+```
 Warehouse (root entity — represents a company/factory)
 └── Sector       (physical area within the warehouse)
 └── Product      (material catalog, per warehouse)
 └── User         (operator, manager, or admin)
+
 MovementOrder      (tracks material movement between sectors)
 └── originSector
 └── destinationSector
 └── product
 └── createdBy (User)
 └── status: PENDING | DELIVERING | DELIVERED | CANCELLED
+```
 
 ---
 
@@ -132,6 +150,11 @@ MovementOrder      (tracks material movement between sectors)
 |---|---|---|---|
 | `GET` | `/api/dashboard` | Aggregated operational metrics | ADMIN, MANAGE |
 
+### AI Assistant
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| `POST` | `/api/chat` | Query operational data via natural language | ADMIN, MANAGE |
+
 **Dashboard response includes:**
 - Total orders and breakdown by status (PENDING, DELIVERING, DELIVERED, CANCELLED)
 - Orders created today
@@ -142,11 +165,12 @@ MovementOrder      (tracks material movement between sectors)
 
 ## 🔐 Authentication Flow
 
+```
 POST /api/auth/login → { email, password }
-Server returns → { token: "eyJhbGci..." }
-Include in all requests → Authorization: Bearer <token>
+Server returns       → { token: "eyJhbGci..." }
+Include in requests  → Authorization: Bearer <token>
 Token expires after 24 hours
-
+```
 
 ### User Roles
 | Role | Description |
@@ -184,7 +208,10 @@ spring.datasource.password=your_password
 ```
 
 Create `.env` in the project root:
+
+```env
 POSTGRES_PASSWORD=your_password
+```
 
 > ⚠️ Both files are listed in `.gitignore` and will never be committed.
 
@@ -236,12 +263,13 @@ Managed by Flyway. Migrations located at `src/main/resources/db/migration/`.
 | `DB_PASSWORD` | Database password |
 | `JWT_SECRET` | Secret key for signing JWT tokens (min 256 bits) |
 | `JWT_EXPIRATION` | Token expiration in milliseconds (e.g. `86400000` = 24h) |
+| `ANTHROPIC_API_KEY` | API key for Claude AI integration |
 
 ---
 
 ## 🧪 Testing
 
-This project includes unit tests for the service layer using **JUnit 5** and **Mockito**.
+This project includes **unit tests** for the service layer and **integration tests** for the controller layer.
 
 ### Running the tests
 
@@ -249,7 +277,7 @@ This project includes unit tests for the service layer using **JUnit 5** and **M
 ./gradlew test
 ```
 
-### Test coverage
+### Unit test coverage
 
 | Service | Tests |
 |---|---|
