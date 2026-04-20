@@ -3,11 +3,16 @@ package com.flowline.flowline.service;
 import com.flowline.flowline.dto.PageResponseDTO;
 import com.flowline.flowline.dto.WarehouseRequestDTO;
 import com.flowline.flowline.dto.WarehouseResponseDTO;
+import com.flowline.flowline.exception.ForbiddenAccessException;
 import com.flowline.flowline.exception.ResourceNotFoundException;
+import com.flowline.flowline.model.User;
+import com.flowline.flowline.model.UserRole;
 import com.flowline.flowline.model.Warehouse;
 import com.flowline.flowline.repository.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
@@ -38,9 +43,16 @@ public class WarehouseService {
         );
     }
 
-    public WarehouseResponseDTO findWareById(Long id) {
+    public WarehouseResponseDTO findWareById(Long id, User loggedUser) {
         Warehouse warehouse = warehouseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + id));
+
+        if (loggedUser.getRole() == UserRole.MANAGE
+                && !loggedUser.getWarehouse().getId().equals(id)) {
+            throw new ForbiddenAccessException(
+                    "Access denied: you can only access your own warehouse");
+        }
+
         return new WarehouseResponseDTO(
                 warehouse.getId(),
                 warehouse.getName(),

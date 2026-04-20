@@ -37,12 +37,7 @@ public class WarehouseController {
             @PathVariable Long id,
             @AuthenticationPrincipal User loggedUser) {
 
-        if (loggedUser.getRole() == UserRole.MANAGE
-                && !loggedUser.getWarehouse().getId().equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        WarehouseResponseDTO result = warehouseService.findWareById(id);
+        WarehouseResponseDTO result = warehouseService.findWareById(id, loggedUser);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

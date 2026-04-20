@@ -3,7 +3,10 @@ package com.flowline.flowline.service;
 import com.flowline.flowline.dto.PageResponseDTO;
 import com.flowline.flowline.dto.WarehouseRequestDTO;
 import com.flowline.flowline.dto.WarehouseResponseDTO;
+import com.flowline.flowline.exception.ForbiddenAccessException;
 import com.flowline.flowline.exception.ResourceNotFoundException;
+import com.flowline.flowline.model.User;
+import com.flowline.flowline.model.UserRole;
 import com.flowline.flowline.model.Warehouse;
 import com.flowline.flowline.repository.WarehouseRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +35,7 @@ public class WarehouseServiceTest {
     @InjectMocks
     WarehouseService warehouseService;
 
+    private User user;
     private Warehouse warehouse;
     private WarehouseRequestDTO warehouseRequestDTO;
 
@@ -45,6 +49,11 @@ public class WarehouseServiceTest {
         warehouse.setCity("Chachoeira");
         warehouse.setState("RS");
         warehouse.setZipCode("000000");
+
+        user = new User();
+        user.setId(1L);
+        user.setRole(UserRole.ADMIN);
+        user.setWarehouse(warehouse);
 
         warehouseRequestDTO = new WarehouseRequestDTO(
                 "Empresa teste mock", "Testando Mock",
@@ -65,13 +74,44 @@ public class WarehouseServiceTest {
     }
 
     @Test
-    public void mustFindWarehouseWithId() {
-
+    public void mustFindWarehouseWithIdAsAdmin() {
         when(warehouseRepository.findById(1L)).thenReturn(Optional.of(warehouse));
-        WarehouseResponseDTO result = warehouseService.findWareById(1L);
+
+        WarehouseResponseDTO result = warehouseService.findWareById(1L, user);
 
         assertNotNull(result);
         assertEquals(1L, result.id());
+    }
+
+    @Test
+    public void mustFindWarehouseWithIdAsManage() {
+        User manage = new User();
+        manage.setId(1L);
+        manage.setRole(UserRole.MANAGE);
+        manage.setWarehouse(warehouse);
+
+        when(warehouseRepository.findById(1L)).thenReturn(Optional.of(warehouse));
+
+        WarehouseResponseDTO result =  warehouseService.findWareById(1L, manage);
+
+        assertNotNull(result);
+        assertEquals(1L, result.id());
+    }
+
+    @Test
+    public void mustThrowForbiddenWhenManageAccessesOtherWarehouse() {
+        Warehouse otherWarehouse = new Warehouse();
+        otherWarehouse.setId(99L);
+
+        User manage = new User();
+        manage.setRole(UserRole.MANAGE);
+        manage.setWarehouse(otherWarehouse);
+
+        when(warehouseRepository.findById(1L)).thenReturn(Optional.of(warehouse));
+
+        assertThrows(
+                ForbiddenAccessException.class,
+                () -> warehouseService.findWareById(1L, manage));
     }
 
     @Test
@@ -81,7 +121,7 @@ public class WarehouseServiceTest {
 
         assertThrows(
                 ResourceNotFoundException.class,
-                () -> warehouseService.findWareById(99L)
+                () -> warehouseService.findWareById(99L, user)
         );
     }
 
