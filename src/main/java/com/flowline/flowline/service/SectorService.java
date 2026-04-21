@@ -41,8 +41,8 @@ public class SectorService {
                 savedSector.getName(),
                 savedSector.getDescription(),
                 savedSector.getBuilding(),
-                savedSector.getWarehouse().getId(),
-                savedSector.getResponsible().getId());
+                savedSector.getResponsible().getId(),
+                savedSector.getWarehouse().getId());
     }
 
     public SectorResponseDTO findSectorById(Long id) {

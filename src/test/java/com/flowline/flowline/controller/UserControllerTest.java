@@ -1,5 +1,5 @@
 package com.flowline.flowline.controller;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flowline.flowline.model.User;
 import com.flowline.flowline.model.UserRole;
 import com.flowline.flowline.model.Warehouse;
@@ -14,11 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-class WarehouseControllerTest {
+public class UserControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -79,27 +77,25 @@ class WarehouseControllerTest {
     }
 
     @Test
-    public void mustCreateWarehouseAsAdmin() throws Exception {
-        mockMvc.perform(post("/api/warehouse")
+    public void mustCreateUserAsAdmin() throws Exception {
+        mockMvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + adminToken)
                 .contentType(APPLICATION_JSON)
                 .content("""
                 {
-                  "name": "New Warehouse",
-                  "description": "Test description",
-                  "street": "Test street",
-                  "city": "Test city",
-                  "state": "RS",
-                  "zipCode": "12345678"
-                 }
-                """))
+                "username": "admin",
+                "email": "admin@test.com",
+                "password": "password",
+                "role": "ADMIN",
+                "warehouseId": %d
+                }
+                """.formatted(warehouse.getId())))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.name").value("New Warehouse"));
+                .andExpect(jsonPath("$.username").value("admin"));
     }
 
     @Test
-    public void mustReturn403WhenOperatorTriesToCreateWarehouse() throws Exception {
+    public void mustReturn403WhenOperatorTriesToCreateUser() throws Exception {
         User operatorUser = new User();
         operatorUser.setUsername("operator");
         operatorUser.setEmail("operator@test.com");
@@ -111,44 +107,75 @@ class WarehouseControllerTest {
         String response = mockMvc.perform(post("/api/auth/login")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                        {"email": "operator@test.com", "password": "password"}
-                    """))
+                        {
+                            "email": "operator@test.com",
+                            "password": "password"
+                        }
+                        """))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
+
         String operatorToken = objectMapper.readTree(response).get("token").asText();
 
-        mockMvc.perform(post("/api/warehouse")
+        mockMvc.perform(post("/api/user")
                         .header("Authorization", "Bearer " + operatorToken)
                         .contentType(APPLICATION_JSON)
                         .content("""
-                        {
-                            "name": "Unauthorized Warehouse",
-                            "description": "Should not be created",
-                            "street": "Test street",
-                            "city": "Test city",
-                            "state": "RS",
-                            "zipCode": "12345678"
-                        }
-                    """))
+                            {
+                            "username": "admin",
+                            "email": "admin@test.com",
+                            "password": "password",
+                            "role": "ADMIN",
+                            "warehouseId": %d
+                            }
+                            """.formatted(warehouse.getId())))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    public void mustGetWarehouseByIdAsAdmin() throws Exception {
-        mockMvc.perform(get("/api/warehouse/" + warehouse.getId())
-                .header("Authorization", "Bearer " + adminToken))
+    public void mustFindUserByIdAsManage() throws Exception {
+        User manage = new User();
+        manage.setUsername("manage");
+        manage.setEmail("manage@test.com");
+        manage.setPassword(passwordEncoder.encode("password"));
+        manage.setRole(UserRole.MANAGE);
+        manage.setWarehouse(warehouse);
+        userRepository.save(manage);
+
+        String response = mockMvc.perform(post("/api/auth/login")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                        {
+                            "email": "manage@test.com",
+                            "password": "password"}
+                        """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.name").value("New Warehouse"));
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        String manageToken = objectMapper.readTree(response).get("token").asText();
+
+        mockMvc.perform(get("/api/user/" + manage.getId())
+                .header("Authorization", "Bearer " + manageToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("manage"))
+                .andExpect(jsonPath("$.role").value("MANAGE"));
     }
 
     @Test
-    public void mustReturn404WhenWarehouseNotFound() throws Exception {
-        mockMvc.perform(get("/api/warehouse/999")
+    public void mustReturn404WhenUserNotFound() throws Exception {
+        mockMvc.perform(get("/api/user/9999")
                 .header("Authorization", "Bearer " + adminToken))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value("404"));
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void mustDeleteUserAsAdmin() throws Exception {
+        mockMvc.perform(delete("/api/user/" + user.getId())
+                .header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isNoContent());
     }
 }
