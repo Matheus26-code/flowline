@@ -23,6 +23,18 @@ public class WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
 
+    private WarehouseResponseDTO toResponseDTO(Warehouse warehouse) {
+        return new WarehouseResponseDTO(
+        warehouse.getId(),
+        warehouse.getName(),
+        warehouse.getDescription(),
+        warehouse.getStreet(),
+        warehouse.getCity(),
+        warehouse.getState(),
+        warehouse.getZipCode());
+    }
+
+
     public WarehouseResponseDTO create(WarehouseRequestDTO warehouseRequestDTO) {
         Warehouse warehouse = new Warehouse();
         warehouse.setName(warehouseRequestDTO.name());
@@ -31,16 +43,7 @@ public class WarehouseService {
         warehouse.setCity(warehouseRequestDTO.city());
         warehouse.setState(warehouseRequestDTO.state());
         warehouse.setZipCode(warehouseRequestDTO.zipCode());
-        Warehouse savedWarehouse = warehouseRepository.save(warehouse);
-        return new WarehouseResponseDTO(
-                savedWarehouse.getId(),
-                savedWarehouse.getName(),
-                savedWarehouse.getDescription(),
-                savedWarehouse.getStreet(),
-                savedWarehouse.getCity(),
-                savedWarehouse.getState(),
-                savedWarehouse.getZipCode()
-        );
+        return toResponseDTO(warehouseRepository.save(warehouse));
     }
 
     public WarehouseResponseDTO findWareById(Long id, User loggedUser) {
@@ -53,27 +56,12 @@ public class WarehouseService {
                     "Access denied: you can only access your own warehouse");
         }
 
-        return new WarehouseResponseDTO(
-                warehouse.getId(),
-                warehouse.getName(),
-                warehouse.getDescription(),
-                warehouse.getStreet(),
-                warehouse.getCity(),
-                warehouse.getState(),
-                warehouse.getZipCode());
+        return toResponseDTO(warehouse);
     }
 
     public PageResponseDTO<WarehouseResponseDTO> findAll(Pageable pageable) {
         Page<WarehouseResponseDTO> page = warehouseRepository.findAll(pageable)
-                .map(warehouse -> new WarehouseResponseDTO(
-                        warehouse.getId(),
-                        warehouse.getName(),
-                        warehouse.getDescription(),
-                        warehouse.getStreet(),
-                        warehouse.getCity(),
-                        warehouse.getState(),
-                        warehouse.getZipCode()
-                ));
+                .map(this::toResponseDTO);
         return new PageResponseDTO<>(
                 page.getContent(),
                 page.getTotalPages(),
@@ -92,16 +80,7 @@ public class WarehouseService {
         warehouse.setCity(warehouseRequestDTO.city());
         warehouse.setState(warehouseRequestDTO.state());
         warehouse.setZipCode(warehouseRequestDTO.zipCode());
-        Warehouse savedWarehouse = warehouseRepository.save(warehouse);
-        return new WarehouseResponseDTO(
-                savedWarehouse.getId(),
-                savedWarehouse.getName(),
-                savedWarehouse.getDescription(),
-                savedWarehouse.getStreet(),
-                savedWarehouse.getCity(),
-                savedWarehouse.getState(),
-                savedWarehouse.getZipCode()
-        );
+        return toResponseDTO(warehouseRepository.save(warehouse));
     }
 
     public void deleteById(Long id) {

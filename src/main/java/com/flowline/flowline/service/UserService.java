@@ -23,28 +23,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final WarehouseRepository warehouseRepository;
 
-    public UserResponseDTO createUser(UserRequestDTO request) {
-        User user = new User();
-        Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
-                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.warehouseId()));
+    private record UserDependecies( Warehouse warehouse ) {}
 
-        user.setUsername(request.username());
-        user.setEmail(request.email());
-        user.setPassword(passwordEncoder.encode(request.password()));
-        user.setRole(request.role());
-        user.setWarehouse(warehouse);
-        User savedUser = userRepository.save(user);
-        return new UserResponseDTO(
-                savedUser.getId(),
-                savedUser.getName(),
-                savedUser.getEmail(),
-                savedUser.getRole(),
-                savedUser.getWarehouse().getId());
+    private UserDependecies resolveDependecies(UserRequestDTO request) {
+        Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
+                .orElseThrow(() -> new ResourceNotFoundException
+                        ("Warehouse not found with id: " + request.warehouseId()));
+
+        return new UserDependecies(warehouse);
     }
 
-    public UserResponseDTO findUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+    private UserResponseDTO toResponse(User user) {
         return new UserResponseDTO(
                 user.getId(),
                 user.getName(),
@@ -53,14 +42,27 @@ public class UserService {
                 user.getWarehouse().getId());
     }
 
+    public UserResponseDTO createUser(UserRequestDTO request) {
+        UserDependecies deps = resolveDependecies(request);
+
+        User user = new User();
+        user.setUsername(request.username());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setRole(request.role());
+        user.setWarehouse(deps.warehouse);
+        return toResponse(userRepository.save(user));
+    }
+
+    public UserResponseDTO findUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        return toResponse(user);
+    }
+
     public PageResponseDTO<UserResponseDTO> findAllUsers(Pageable pageable) {
         Page<UserResponseDTO> page = userRepository.findAll(pageable)
-                .map(user -> new UserResponseDTO(
-                        user.getId(),
-                        user.getName(),
-                        user.getEmail(),
-                        user.getRole(),
-                        user.getWarehouse().getId()));
+                .map(this::toResponse);
         return new PageResponseDTO<>(
                 page.getContent(),
                 page.getTotalPages(),
@@ -71,23 +73,15 @@ public class UserService {
     }
 
     public UserResponseDTO updateUser(Long id, UserRequestDTO request) {
+        UserDependecies deps = resolveDependecies(request);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
-                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.warehouseId()));
-
         user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setEmail(request.email());
         user.setRole(request.role());
-        user.setWarehouse(warehouse);
-        User savedUser = userRepository.save(user);
-        return new UserResponseDTO(
-                savedUser.getId(),
-                savedUser.getName(),
-                savedUser.getEmail(),
-                savedUser.getRole(),
-                savedUser.getWarehouse().getId());
+        user.setWarehouse(deps.warehouse);
+        return toResponse(userRepository.save(user));
     }
 
     public void deleteUser(Long id) {

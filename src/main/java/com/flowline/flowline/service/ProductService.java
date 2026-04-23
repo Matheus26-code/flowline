@@ -20,29 +20,16 @@ public class ProductService {
     private final WarehouseRepository warehouseRepository;
     private final ProductRepository productRepository;
 
-    public ProductResponseDTO createProduct(ProductRequestDTO request) {
-        Product product = new Product();
-        Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
-                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.warehouseId()));
+    private record ProductDependencies( Warehouse warehouse ) {}
 
-        product.setName(request.name());
-        product.setWeight(request.weight());
-        product.setUnit(request.unit());
-        product.setLocation(request.location());
-        product.setWarehouse(warehouse);
-        Product savedProduct = productRepository.save(product);
-        return new ProductResponseDTO(
-                savedProduct.getId(),
-                savedProduct.getName(),
-                savedProduct.getWeight(),
-                savedProduct.getUnit(),
-                savedProduct.getLocation(),
-                savedProduct.getWarehouse().getId());
+    private ProductDependencies resolveDependencies(ProductRequestDTO request) {
+        Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
+                .orElseThrow(() -> new ResourceNotFoundException
+                        ("Warehouse not found with id: " + request.warehouseId()));
+        return new ProductDependencies(warehouse);
     }
 
-    public ProductResponseDTO findProductById(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+    private ProductResponseDTO toResponse(Product product) {
         return new ProductResponseDTO(
                 product.getId(),
                 product.getName(),
@@ -52,15 +39,26 @@ public class ProductService {
                 product.getWarehouse().getId());
     }
 
+    public ProductResponseDTO createProduct(ProductRequestDTO request) {
+        ProductDependencies deps = resolveDependencies(request);
+        Product product = new Product();
+        product.setName(request.name());
+        product.setWeight(request.weight());
+        product.setUnit(request.unit());
+        product.setLocation(request.location());
+        product.setWarehouse(deps.warehouse);
+        return toResponse(productRepository.save(product));
+    }
+
+    public ProductResponseDTO findProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+        return toResponse(product);
+    }
+
     public PageResponseDTO<ProductResponseDTO> findAllProducts(Pageable pageable) {
         Page<ProductResponseDTO> page = productRepository.findAll(pageable)
-                .map(product -> new ProductResponseDTO(
-                        product.getId(),
-                        product.getName(),
-                        product.getWeight(),
-                        product.getUnit(),
-                        product.getLocation(),
-                        product.getWarehouse().getId()));
+                .map(this::toResponse);
         return new PageResponseDTO<>(
                 page.getContent(),
                 page.getTotalPages(),
@@ -71,23 +69,17 @@ public class ProductService {
     }
 
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO request) {
+        ProductDependencies deps = resolveDependencies(request);
+
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
-        Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
-                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.warehouseId()));
+                .orElseThrow(() -> new ResourceNotFoundException
+                        ("Product not found with id: " + id));
         product.setName(request.name());
         product.setWeight(request.weight());
         product.setUnit(request.unit());
         product.setLocation(request.location());
-        product.setWarehouse(warehouse);
-        Product updatedProduct = productRepository.save(product);
-        return new ProductResponseDTO(
-                updatedProduct.getId(),
-                updatedProduct.getName(),
-                updatedProduct.getWeight(),
-                updatedProduct.getUnit(),
-                updatedProduct.getLocation(),
-                updatedProduct.getWarehouse().getId());
+        product.setWarehouse(deps.warehouse);
+        return toResponse(productRepository.save(product));
     }
 
     public void deleteProduct(Long id) {

@@ -59,8 +59,8 @@ public class MovementOrderService {
 
     public OrderResponseDTO createOrder (OrderRequestDTO request) {
         OrderDependencies deps = resolveDependencies(request);
-        MovementOrder order = new MovementOrder();
 
+        MovementOrder order = new MovementOrder();
         order.setOriginSector(deps.originSector);
         order.setDestinationSector(deps.destinationSector);
         order.setUser(deps.user);
