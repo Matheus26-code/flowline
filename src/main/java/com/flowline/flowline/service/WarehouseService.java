@@ -10,6 +10,7 @@ import com.flowline.flowline.model.UserRole;
 import com.flowline.flowline.model.Warehouse;
 import com.flowline.flowline.repository.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,12 @@ import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
 
-    private WarehouseResponseDTO toResponseDTO(Warehouse warehouse) {
+    private WarehouseResponseDTO toResponse(Warehouse warehouse) {
         return new WarehouseResponseDTO(
         warehouse.getId(),
         warehouse.getName(),
@@ -34,8 +36,8 @@ public class WarehouseService {
         warehouse.getZipCode());
     }
 
-
     public WarehouseResponseDTO create(WarehouseRequestDTO warehouseRequestDTO) {
+        log.info("Creating Warehouse request: {}", warehouseRequestDTO);
         Warehouse warehouse = new Warehouse();
         warehouse.setName(warehouseRequestDTO.name());
         warehouse.setDescription(warehouseRequestDTO.description());
@@ -43,25 +45,34 @@ public class WarehouseService {
         warehouse.setCity(warehouseRequestDTO.city());
         warehouse.setState(warehouseRequestDTO.state());
         warehouse.setZipCode(warehouseRequestDTO.zipCode());
-        return toResponseDTO(warehouseRepository.save(warehouse));
+        WarehouseResponseDTO result = toResponse(warehouseRepository.save(warehouse));
+        log.info("Warehouse created successfully: id={}, name={}",
+                result.id(), result.name());
+        return result;
     }
 
     public WarehouseResponseDTO findWareById(Long id, User loggedUser) {
+        log.info("Finding Warehouse by ID: {}", id);
         Warehouse warehouse = warehouseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + id));
-
+                .orElseThrow(() -> {
+                    log.warn("Warehouse not found with id {}", id);
+                    return new ResourceNotFoundException("Warehouse not found with id: " + id);
+                });
         if (loggedUser.getRole() == UserRole.MANAGE
                 && !loggedUser.getWarehouse().getId().equals(id)) {
             throw new ForbiddenAccessException(
                     "Access denied: you can only access your own warehouse");
         }
-
-        return toResponseDTO(warehouse);
+        WarehouseResponseDTO result = toResponse(warehouse);
+        log.info("Warehouse find successfully: id={}, name={}",
+                result.id(), result.name());
+        return result;
     }
 
     public PageResponseDTO<WarehouseResponseDTO> findAll(Pageable pageable) {
+        log.info("Finding all warehouses");
         Page<WarehouseResponseDTO> page = warehouseRepository.findAll(pageable)
-                .map(this::toResponseDTO);
+                .map(this::toResponse);
         return new PageResponseDTO<>(
                 page.getContent(),
                 page.getTotalPages(),
@@ -72,18 +83,28 @@ public class WarehouseService {
     }
 
     public WarehouseResponseDTO updateWarehouse(Long id, WarehouseRequestDTO warehouseRequestDTO) {
+        log.info("Updating Warehouse by ID: {}", id);
         Warehouse warehouse = warehouseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Warehouse not found with id {}", id);
+                    return new ResourceNotFoundException("Warehouse not found with id: " + id);
+                });
         warehouse.setName(warehouseRequestDTO.name());
         warehouse.setDescription(warehouseRequestDTO.description());
         warehouse.setStreet(warehouseRequestDTO.street());
         warehouse.setCity(warehouseRequestDTO.city());
         warehouse.setState(warehouseRequestDTO.state());
         warehouse.setZipCode(warehouseRequestDTO.zipCode());
-        return toResponseDTO(warehouseRepository.save(warehouse));
+
+        WarehouseResponseDTO result = toResponse(warehouseRepository.save(warehouse));
+        log.info("Warehouse updated successfully: id={}, name={}",
+                result.id(), result.name());
+        return result;
     }
 
     public void deleteById(Long id) {
+        log.info("Deleting Warehouse by ID: {}", id);
         warehouseRepository.deleteById(id);
+        log.info("Warehouse {} deleted", id);
     }
 }

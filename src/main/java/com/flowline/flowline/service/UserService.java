@@ -9,6 +9,7 @@ import com.flowline.flowline.model.Warehouse;
 import com.flowline.flowline.repository.UserRepository;
 import com.flowline.flowline.repository.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final PasswordEncoder passwordEncoder;
@@ -43,6 +45,7 @@ public class UserService {
     }
 
     public UserResponseDTO createUser(UserRequestDTO request) {
+        log.info("Creating user: {}", request);
         UserDependecies deps = resolveDependecies(request);
 
         User user = new User();
@@ -51,13 +54,23 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(request.role());
         user.setWarehouse(deps.warehouse);
-        return toResponse(userRepository.save(user));
+        UserResponseDTO result = toResponse(userRepository.save(user));
+        log.info("User created successfully: id={}, name={}",
+                result.id(), result.username());
+        return result;
     }
 
     public UserResponseDTO findUserById(Long id) {
+        log.info("Finding user by id: {}", id);
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        return toResponse(user);
+                .orElseThrow(() -> {
+                    log.warn("User not found with id: {}", id);
+                    return new ResourceNotFoundException("User not found with id: " + id);
+                });
+        UserResponseDTO result = toResponse(user);
+        log.info("User find successfully: id={}, name={}",
+                result.id(), result.username());
+        return result;
     }
 
     public PageResponseDTO<UserResponseDTO> findAllUsers(Pageable pageable) {
@@ -73,6 +86,7 @@ public class UserService {
     }
 
     public UserResponseDTO updateUser(Long id, UserRequestDTO request) {
+        log.info("Updating user: {}", request);
         UserDependecies deps = resolveDependecies(request);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
@@ -81,10 +95,15 @@ public class UserService {
         user.setEmail(request.email());
         user.setRole(request.role());
         user.setWarehouse(deps.warehouse);
-        return toResponse(userRepository.save(user));
+        UserResponseDTO result = toResponse(userRepository.save(user));
+        log.info("User updated successfully: id={}, name={}",
+                result.id(), result.username());
+        return result;
     }
 
     public void deleteUser(Long id) {
+        log.info("Deleting user: {}", id);
         userRepository.deleteById(id);
+        log.info("User deleted successfully: id={}", id);
     }
 }

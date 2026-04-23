@@ -10,6 +10,7 @@ import com.flowline.flowline.repository.ProductRepository;
 import com.flowline.flowline.repository.SectorRepository;
 import com.flowline.flowline.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MovementOrderService {
 
     private final OrderRepository orderRepository;
@@ -35,13 +37,26 @@ public class MovementOrderService {
 
     private OrderDependencies resolveDependencies(OrderRequestDTO request) {
         Sector originSector = sectorRepository.findById(request.originSectorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Sector not found"));
+                .orElseThrow(() -> {
+                    log.warn("Origin Sector not found with id: {}", request.originSectorId());
+                    return new ResourceNotFoundException("Sector not found");
+                });
         Sector destinationSector = sectorRepository.findById(request.destinationSectorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Sector not found"));
+                .orElseThrow(() -> {
+                    log.warn("Destination Sector not found with id: {}", request.originSectorId());
+                    return new ResourceNotFoundException("Sector not found");
+                });
         User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> {
+                    log.warn("User not found with id: {}", request.userId());
+                    return new ResourceNotFoundException("User not found");
+                });
         Product product = productRepository.findById(request.productId())
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+                .orElseThrow(() -> {
+                    log.warn("Product not found with id: {}", request.productId());
+                    return new ResourceNotFoundException("Product not found");
+                });
+
         return new OrderDependencies(originSector, destinationSector, user, product);
     }
 
@@ -58,8 +73,8 @@ public class MovementOrderService {
     }
 
     public OrderResponseDTO createOrder (OrderRequestDTO request) {
+        log.info("Creating a new order: {}", request);
         OrderDependencies deps = resolveDependencies(request);
-
         MovementOrder order = new MovementOrder();
         order.setOriginSector(deps.originSector);
         order.setDestinationSector(deps.destinationSector);
@@ -68,16 +83,27 @@ public class MovementOrderService {
         order.setStatus(MovementStatus.PENDING);
         order.setQuantity(request.quantity());
         order.setCreatedAt(LocalDateTime.now());
-        return toResponseDTO(orderRepository.save(order));
+        OrderResponseDTO result = toResponseDTO(orderRepository.save(order));
+        log.info("Order created successfully: id={}",
+                result.id());
+        return result;
     }
 
     public OrderResponseDTO findOrderById(Long id) {
+        log.info("Finding order by id: {}", id);
         MovementOrder order = orderRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
-        return toResponseDTO(order);
+                .orElseThrow(() -> {
+                    log.warn("Order not found with id: {}", id);
+                    return new ResourceNotFoundException("Order not found with id: " + id);
+                });
+        OrderResponseDTO result = toResponseDTO(order);
+        log.info("Order find successfully: id={}",
+                result.id());
+        return result;
     }
 
     public PageResponseDTO<OrderResponseDTO> findAllOrders(Pageable pageable) {
+        log.info("Finding all orders by page: {}", pageable);
         Page<OrderResponseDTO> page = orderRepository.findAll(pageable)
                 .map(this::toResponseDTO);
         return new PageResponseDTO<>(
@@ -90,9 +116,13 @@ public class MovementOrderService {
     }
 
     public OrderResponseDTO updateOrder(Long id, OrderRequestDTO request) {
+        log.info("Updating order by id: {}", id);
         OrderDependencies deps = resolveDependencies(request);
         MovementOrder order = orderRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Order not found with id: {}", id);
+                    return new ResourceNotFoundException("Order not found with id: " + id);
+                });
 
         order.setOriginSector(deps.originSector);
         order.setDestinationSector(deps.destinationSector);
@@ -100,10 +130,15 @@ public class MovementOrderService {
         order.setProduct(deps.product);
         order.setStatus(MovementStatus.PENDING);
         order.setQuantity(request.quantity());
-        return toResponseDTO(orderRepository.save(order));
+        OrderResponseDTO result = toResponseDTO(orderRepository.save(order));
+        log.info("Order updated successfully: id={}",
+                result.id());
+        return result;
     }
 
     public void deleteOrderById(Long id) {
+        log.info("Deleting order by id: {}", id);
         orderRepository.deleteById(id);
+        log.info("Order deleted successfully: id={}", id);
     }
 }

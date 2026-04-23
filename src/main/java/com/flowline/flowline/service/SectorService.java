@@ -9,12 +9,14 @@ import com.flowline.flowline.repository.SectorRepository;
 import com.flowline.flowline.repository.UserRepository;
 import com.flowline.flowline.repository.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SectorService {
 
     private final UserRepository userRepository;
@@ -49,6 +51,7 @@ public class SectorService {
     }
 
     public SectorResponseDTO createSector(SectorRequestDTO request) {
+        log.info("Creating a new sector: {}", request);
         SectorDependencies deps =  resolveDepencies(request);
 
         Sector sector = new Sector();
@@ -57,16 +60,26 @@ public class SectorService {
         sector.setBuilding(request.building());
         sector.setWarehouse(deps.warehouse);
         sector.setResponsible(deps.user);
-        return toResponse(sectorRepository.save(sector));
+        SectorResponseDTO result = toResponse(sectorRepository.save(sector));
+        log.info("Sector created successfully: id={}, name={}",
+                result.id(), result.name());
+        return result;
     }
 
     public SectorResponseDTO findSectorById(Long id) {
         Sector sector = sectorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Sector not found with id: " + id));
-        return toResponse(sector);
+                .orElseThrow(() -> {
+                    log.warn("Sector not found with id: {}", id);
+                    return new ResourceNotFoundException("Sector not found with id: " + id);
+                });
+        SectorResponseDTO result = toResponse(sector);
+        log.info("Sector find successfully: id={}, name={}",
+                result.id(), result.name());
+        return result;
     }
 
     public PageResponseDTO<SectorResponseDTO> findAllSectors(Pageable pageable) {
+        log.info("Finding all sectors by page: {}", pageable);
         Page<SectorResponseDTO> page = sectorRepository.findAll(pageable)
                 .map(this::toResponse);
         return new PageResponseDTO<>(
@@ -79,20 +92,29 @@ public class SectorService {
     }
 
     public SectorResponseDTO updateSector(Long id, SectorRequestDTO request) {
+        log.info("Updating sector with id: {}", id);
         SectorDependencies deps = resolveDepencies(request);
-
         Sector sector = sectorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException
-                        ("Sector not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Sector not found with id: {}", id);
+                    return new ResourceNotFoundException
+                            ("Sector not found with id: " + id);
+                });
         sector.setName(request.name());
         sector.setDescription(request.description());
         sector.setBuilding(request.building());
         sector.setWarehouse(deps.warehouse);
         sector.setResponsible(deps.user);
-        return toResponse(sectorRepository.save(sector));
+        SectorResponseDTO result = toResponse(sectorRepository.save(sector));
+
+        log.info("Sector updated successfully: id={}, name={}",
+                result.id(), result.name());
+        return result;
     }
 
     public void deleteById(Long id) {
+        log.info("Deleting a sector with id: {}", id);
         sectorRepository.deleteById(id);
+        log.info("Sector deleted successfully with id: {}", id);
     }
 }

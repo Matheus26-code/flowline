@@ -9,12 +9,14 @@ import com.flowline.flowline.model.Warehouse;
 import com.flowline.flowline.repository.ProductRepository;
 import com.flowline.flowline.repository.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
     private final WarehouseRepository warehouseRepository;
@@ -40,6 +42,9 @@ public class ProductService {
     }
 
     public ProductResponseDTO createProduct(ProductRequestDTO request) {
+        log.info("Creating product: name={}, warehouseId={}",
+                request.name(), request.warehouseId());
+
         ProductDependencies deps = resolveDependencies(request);
         Product product = new Product();
         product.setName(request.name());
@@ -47,16 +52,28 @@ public class ProductService {
         product.setUnit(request.unit());
         product.setLocation(request.location());
         product.setWarehouse(deps.warehouse);
-        return toResponse(productRepository.save(product));
+        ProductResponseDTO result = toResponse(productRepository.save(product));
+
+        log.info("Product created successfully: id={}, name={}",
+                result.id(), result.name());
+        return result;
     }
 
     public ProductResponseDTO findProductById(Long id) {
+        log.info("Finding product by id: {}", id);
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
-        return toResponse(product);
+                .orElseThrow(() -> {
+                    log.warn("Product not found: id={}", id);
+                    return new ResourceNotFoundException("Product not found with id: " + id);
+                });
+        ProductResponseDTO result = toResponse(product);
+        log.info("Product find successfully: id={}, name={}",
+                result.id(), result.name());
+        return result;
     }
 
     public PageResponseDTO<ProductResponseDTO> findAllProducts(Pageable pageable) {
+        log.info("Finding all products in page: {}", pageable);
         Page<ProductResponseDTO> page = productRepository.findAll(pageable)
                 .map(this::toResponse);
         return new PageResponseDTO<>(
@@ -69,11 +86,14 @@ public class ProductService {
     }
 
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO request) {
+        log.info("Update product: id={}, name={}", id, request.name());
         ProductDependencies deps = resolveDependencies(request);
 
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException
-                        ("Product not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Product not found: id={}", id);
+                    return new ResourceNotFoundException("Product not found with id: " + id);
+                });
         product.setName(request.name());
         product.setWeight(request.weight());
         product.setUnit(request.unit());
@@ -83,6 +103,8 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
+        log.info("Deleting product by id: {}", id);
         productRepository.deleteById(id);
+        log.info("Product deleted: id={}", id);
     }
 }
