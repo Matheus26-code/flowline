@@ -47,3 +47,4 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           JWT_SECRET: flowline-secret-key-must-be-at-least-256-bits-long-for-hs256
           JWT_EXPIRATION: 86400000
+          SPRING_PROFILES_ACTIVE: test
