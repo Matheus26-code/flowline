@@ -39,11 +39,8 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run tests
-        run: ./gradlew test --info 2>&1 | tail -200
+        run: ./gradlew test
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5433/flowline
-          SPRING_DATASOURCE_USERNAME: mathe
-          SPRING_DATASOURCE_PASSWORD: testpassword
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           JWT_SECRET: flowline-secret-key-must-be-at-least-256-bits-long-for-hs256
           JWT_EXPIRATION: 86400000
