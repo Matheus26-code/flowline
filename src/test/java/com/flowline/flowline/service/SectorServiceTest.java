@@ -127,6 +127,7 @@ public class SectorServiceTest {
 
     @Test
     public void mustDeleteSectorById() {
+        when(sectorRepository.existsById(1L)).thenReturn(true);
         sectorService.deleteById(1L);
         verify(sectorRepository).deleteById(1L);
     }

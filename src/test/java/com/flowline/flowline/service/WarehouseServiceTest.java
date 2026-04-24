@@ -151,7 +151,7 @@ public class WarehouseServiceTest {
 
     @Test
     public void mustDeleteWarehouseById() {
-
+        when(warehouseRepository.existsById(1L)).thenReturn(true);
         warehouseService.deleteById(1L);
         verify(warehouseRepository).deleteById(1L);
     }

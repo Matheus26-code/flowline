@@ -103,8 +103,12 @@ public class WarehouseService {
     }
 
     public void deleteById(Long id) {
-        log.info("Deleting Warehouse by ID: {}", id);
+        log.info("Deleting warehouse by id: {}", id);
+        if (!warehouseRepository.existsById(id)) {
+            log.warn("Warehouse not found for deletion: id={}", id);
+            throw new ResourceNotFoundException("Warehouse not found with id: " + id);
+        }
         warehouseRepository.deleteById(id);
-        log.info("Warehouse {} deleted", id);
+        log.info("Warehouse deleted: id={}", id);
     }
 }

@@ -113,8 +113,12 @@ public class SectorService {
     }
 
     public void deleteById(Long id) {
-        log.info("Deleting a sector with id: {}", id);
+        log.info("Deleting sector by id: {}", id);
+        if (!sectorRepository.existsById(id)) {
+            log.warn("Sector not found for deletion: id={}", id);
+            throw new ResourceNotFoundException("Sector not found with id: " + id);
+        }
         sectorRepository.deleteById(id);
-        log.info("Sector deleted successfully with id: {}", id);
+        log.info("Sector deleted: id={}", id);
     }
 }

@@ -119,6 +119,7 @@ public class ProductServiceTest {
 
     @Test
     public void mustSuccessfullyDeleteProduct() {
+        when(productRepository.existsById(1L)).thenReturn(true);
         productService.deleteProduct(1L);
         verify(productRepository).deleteById(1L);
     }

@@ -104,6 +104,10 @@ public class ProductService {
 
     public void deleteProduct(Long id) {
         log.info("Deleting product by id: {}", id);
+        if (!productRepository.existsById(id)) {
+            log.warn("Product not found for deletion: id={}", id);
+            throw new ResourceNotFoundException("Product not found with id: " + id);
+        }
         productRepository.deleteById(id);
         log.info("Product deleted: id={}", id);
     }

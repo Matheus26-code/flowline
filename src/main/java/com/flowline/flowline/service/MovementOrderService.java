@@ -138,7 +138,11 @@ public class MovementOrderService {
 
     public void deleteOrderById(Long id) {
         log.info("Deleting order by id: {}", id);
+        if (!orderRepository.existsById(id)) {
+            log.warn("Order not found for deletion: id={}", id);
+            throw new ResourceNotFoundException("Order not found with id: " + id);
+        }
         orderRepository.deleteById(id);
-        log.info("Order deleted successfully: id={}", id);
+        log.info("Order deleted: id={}", id);
     }
 }

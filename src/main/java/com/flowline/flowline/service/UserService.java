@@ -102,8 +102,12 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        log.info("Deleting user: {}", id);
+        log.info("Deleting user by id: {}", id);
+        if (!userRepository.existsById(id)) {
+            log.warn("User not found for deletion: id={}", id);
+            throw new ResourceNotFoundException("User not found with id: " + id);
+        }
         userRepository.deleteById(id);
-        log.info("User deleted successfully: id={}", id);
+        log.info("User deleted: id={}", id);
     }
 }

@@ -143,6 +143,7 @@ public class MovementOrderServiceTest {
 
     @Test
     public void mustSuccessfullyDeleteOrder() {
+        when(orderRepository.existsById(1L)).thenReturn(true);
         movementOrderService.deleteOrderById(1L);
         verify(orderRepository).deleteById(1L);
     }
