@@ -1,5 +1,7 @@
 package com.flowline.flowline.config;
 
+import com.flowline.flowline.handler.CustomAccessDeniedHandler;
+import com.flowline.flowline.handler.CustomAuthenticationEntryPoint;
 import com.flowline.flowline.security.JwtAuthFilter;
 import com.flowline.flowline.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,8 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final UserDetailsServiceImpl userDetailsService;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -37,6 +41,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
+                .exceptionHandling(ex -> ex                                    // ← adiciona isso
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

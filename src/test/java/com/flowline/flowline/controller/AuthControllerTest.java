@@ -78,30 +78,29 @@ class AuthControllerTest {
     }
 
     @Test
-    void mustReturn403WhenPasswordIsWrong() throws Exception {
-        mockMvc.perform(post("/api/auth/login")
-                .contentType(APPLICATION_JSON)
-                .content("""
-                {
-                    "email": "emailtest@gmail.com",
-                    "password": "wrongPassword"
-                }
-                """))
-                .andExpect(status().isForbidden());
-
-    }
-
-    @Test
-    void mustReturn403WhenUserNotFound() throws Exception {
+    void mustReturn401WhenPasswordIsWrong() throws Exception {
         mockMvc.perform(post("/api/auth/login")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                {
-                    "email": "test@gmail.com",
-                    "password": "password"
-                }
-                """))
-                .andExpect(status().isForbidden());
+                    {
+                        "email": "emailtest@gmail.com",
+                        "password": "wrongPassword"
+                    }
+                    """))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void mustReturn401WhenUserNotFound() throws Exception {
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                    {
+                        "email": "test@gmail.com",
+                        "password": "password"
+                    }
+                    """))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
