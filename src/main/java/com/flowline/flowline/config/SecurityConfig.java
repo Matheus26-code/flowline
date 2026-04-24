@@ -43,9 +43,10 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**",
+                                "/swagger-ui.html", "/webjars/**").permitAll()
                         .requestMatchers("/", "/index.html", "/dashboard.html",
-                                "/css/**", "/js/**").permitAll()
+                                "/css/**", "/js/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(authenticationEntryPoint)
