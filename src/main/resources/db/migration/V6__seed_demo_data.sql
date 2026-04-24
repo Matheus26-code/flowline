@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 INSERT INTO warehouse (name, description, street, city, state, zip_code)
 SELECT 'GKN Automotive BR', 'Automotive components manufacturing plant',
        'Av. Industrial, 1500', 'Gravataí', 'RS', '94110-000'
