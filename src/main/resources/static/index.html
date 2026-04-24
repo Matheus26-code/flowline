@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlowLine — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="login-page">
+
+  <div class="login-bg">
+    <div class="grid-overlay"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <main class="login-container">
+    <div class="login-card">
+
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect x="2" y="8" width="6" height="16" rx="1" fill="var(--accent)"/>
+            <rect x="11" y="4" width="6" height="24" rx="1" fill="var(--accent)" opacity=".6"/>
+            <rect x="20" y="11" width="6" height="13" rx="1" fill="var(--accent)" opacity=".35"/>
+            <path d="M2 24 L28 8" stroke="var(--accent)" stroke-width="1" opacity=".3" stroke-dasharray="3 3"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">FlowLine</span>
+          <span class="brand-tag">Operations Dashboard</span>
+        </div>
+      </div>
+
+      <div class="login-header">
+        <h1>Welcome back</h1>
+        <p>Sign in to monitor your warehouse operations</p>
+      </div>
+
+      <form id="loginForm" class="login-form" novalidate>
+        <div class="field-group">
+          <label for="email">Email</label>
+          <div class="input-wrapper">
+            <input type="email" id="email" placeholder="admin@flowline.com" autocomplete="email" required />
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/>
+                <path d="M1 5.5L8 10L15 5.5" stroke="currentColor" stroke-width="1.2"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required />
+            <span class="input-icon toggle-pw" id="togglePw" title="Show password">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <ellipse cx="8" cy="8" rx="7" ry="4.5" stroke="currentColor" stroke-width="1.2"/>
+                <circle cx="8" cy="8" r="2" fill="currentColor"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <div id="errorMsg" class="error-msg" role="alert" aria-live="polite"></div>
+
+        <button type="submit" class="btn-login" id="loginBtn">
+          <span class="btn-text">Sign In</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <span>Powered by</span>
+        <strong>Spring Boot 3 · Spring AI · PostgreSQL</strong>
+      </div>
+
+    </div>
+
+    <div class="login-info">
+      <div class="info-badge">Live API</div>
+      <p class="info-url" id="apiUrl"></p>
+      <div class="info-stats">
+        <div class="info-stat">
+          <span class="info-stat-num">5</span>
+          <span class="info-stat-label">Entities</span>
+        </div>
+        <div class="info-stat">
+          <span class="info-stat-num">63</span>
+          <span class="info-stat-label">Tests</span>
+        </div>
+        <div class="info-stat">
+          <span class="info-stat-num">JWT</span>
+          <span class="info-stat-label">Auth</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/auth.js"></script>
+  <script>
+    document.getElementById('apiUrl').textContent = window.location.origin + '/api';
+    document.getElementById('togglePw').addEventListener('click', () => {
+      const pw = document.getElementById('password');
+      pw.type = pw.type === 'password' ? 'text' : 'password';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlowLine — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body class="dashboard-page">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+        <rect x="2" y="8" width="6" height="16" rx="1" fill="var(--accent)"/>
+        <rect x="11" y="4" width="6" height="24" rx="1" fill="var(--accent)" opacity=".6"/>
+        <rect x="20" y="11" width="6" height="13" rx="1" fill="var(--accent)" opacity=".35"/>
+      </svg>
+      <span>FlowLine</span>
+    </div>
+    <div class="nav-center">
+      <span class="nav-tag">Operations Dashboard</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-status">
+        <span class="status-dot"></span>
+        <span id="navStatus">Live</span>
+      </div>
+      <button class="btn-logout" id="logoutBtn" title="Logout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M10 11l3-3-3-3M13 8H6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Logout
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="dash-main">
+
+    <!-- HEADER ROW -->
+    <div class="dash-header">
+      <div>
+        <h1 class="dash-title">Good morning<span id="dashGreetName"></span></h1>
+        <p class="dash-sub" id="dashDate"></p>
+      </div>
+      <button class="btn-refresh" id="refreshBtn" title="Refresh data">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M13.5 8A5.5 5.5 0 112.5 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M2.5 2.5v3h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Refresh
+      </button>
+    </div>
+
+    <!-- METRICS GRID -->
+    <div class="metrics-grid">
+      <div class="metric-card metric-primary">
+        <div class="metric-label">Total Orders</div>
+        <div class="metric-value" id="metricTotal">—</div>
+        <div class="metric-sub">all time</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-dot dot-yellow"></div>
+        <div class="metric-label">Pending</div>
+        <div class="metric-value" id="metricPending">—</div>
+        <div class="metric-sub">awaiting dispatch</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-dot dot-blue"></div>
+        <div class="metric-label">Delivering</div>
+        <div class="metric-value" id="metricDelivering">—</div>
+        <div class="metric-sub">in transit</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-dot dot-green"></div>
+        <div class="metric-label">Delivered</div>
+        <div class="metric-value" id="metricDelivered">—</div>
+        <div class="metric-sub">completed</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-dot dot-red"></div>
+        <div class="metric-label">Cancelled</div>
+        <div class="metric-value" id="metricCancelled">—</div>
+        <div class="metric-sub">not fulfilled</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Today's Orders</div>
+        <div class="metric-value" id="metricToday">—</div>
+        <div class="metric-sub">created today</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Products</div>
+        <div class="metric-value" id="metricProducts">—</div>
+        <div class="metric-sub">in catalog</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Users</div>
+        <div class="metric-value" id="metricUsers">—</div>
+        <div class="metric-sub">registered</div>
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW: chart + AI -->
+    <div class="bottom-row">
+
+      <!-- CHART -->
+      <div class="chart-card">
+        <div class="card-header">
+          <h2>Orders by Status</h2>
+          <span class="card-tag">current snapshot</span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="ordersChart"></canvas>
+        </div>
+      </div>
+
+      <!-- AI CHAT -->
+      <div class="chat-card">
+        <div class="card-header">
+          <h2>AI Assistant</h2>
+          <span class="card-tag ai-tag">Spring AI · Claude</span>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-msg bot">
+            <div class="chat-bubble">Hello! I'm your FlowLine assistant. Ask me anything about your operations — orders, products, or users.</div>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <input
+            type="text"
+            id="chatInput"
+            class="chat-input"
+            placeholder="How many orders are pending?"
+            maxlength="300"
+          />
+          <button class="btn-send" id="sendBtn" title="Send">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M13.5 8H2.5M13.5 8L9 3.5M13.5 8L9 12.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
