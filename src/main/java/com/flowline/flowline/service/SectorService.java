@@ -28,7 +28,7 @@ public class SectorService {
             User user
     ) {}
 
-    private SectorDependencies resolveDepencies(SectorRequestDTO request) {
+    private SectorDependencies resolveDependencies(SectorRequestDTO request) {
         Warehouse warehouse = warehouseRepository.findById(request.warehouseId())
                 .orElseThrow(() -> new ResourceNotFoundException
                         ("Warehouse not found with id: " + request.warehouseId()));
@@ -52,7 +52,7 @@ public class SectorService {
 
     public SectorResponseDTO createSector(SectorRequestDTO request) {
         log.info("Creating a new sector: {}", request);
-        SectorDependencies deps =  resolveDepencies(request);
+        SectorDependencies deps =  resolveDependencies(request);
 
         Sector sector = new Sector();
         sector.setName(request.name());
@@ -93,7 +93,7 @@ public class SectorService {
 
     public SectorResponseDTO updateSector(Long id, SectorRequestDTO request) {
         log.info("Updating sector with id: {}", id);
-        SectorDependencies deps = resolveDepencies(request);
+        SectorDependencies deps = resolveDependencies(request);
         Sector sector = sectorRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Sector not found with id: {}", id);

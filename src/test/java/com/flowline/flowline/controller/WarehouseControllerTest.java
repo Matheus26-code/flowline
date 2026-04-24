@@ -149,6 +149,6 @@ class WarehouseControllerTest {
         mockMvc.perform(get("/api/warehouse/999")
                 .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value("404"));
+                .andExpect(jsonPath("$.status").value(404));
     }
 }

@@ -43,7 +43,7 @@ public class MovementOrderService {
                 });
         Sector destinationSector = sectorRepository.findById(request.destinationSectorId())
                 .orElseThrow(() -> {
-                    log.warn("Destination Sector not found with id: {}", request.originSectorId());
+                    log.warn("Destination Sector not found with id: {}", request.destinationSectorId());
                     return new ResourceNotFoundException("Sector not found");
                 });
         User user = userRepository.findById(request.userId())
