@@ -3,6 +3,7 @@ package com.flowline.flowline.config;
 import com.flowline.flowline.handler.CustomAccessDeniedHandler;
 import com.flowline.flowline.handler.CustomAuthenticationEntryPoint;
 import com.flowline.flowline.security.JwtAuthFilter;
+import com.flowline.flowline.security.RateLimitFilter;
 import com.flowline.flowline.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final RateLimitFilter rateLimitFilter;
     private final JwtAuthFilter jwtAuthFilter;
     private final UserDetailsServiceImpl userDetailsService;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
@@ -45,6 +47,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .authenticationProvider(authenticationProvider())
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
