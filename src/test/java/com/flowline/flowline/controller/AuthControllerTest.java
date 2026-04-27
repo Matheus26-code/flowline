@@ -74,7 +74,8 @@ class AuthControllerTest {
                 }
                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").exists());
+                .andExpect(jsonPath("$.token").exists())
+                .andExpect(jsonPath("$.role").exists());
     }
 
     @Test
