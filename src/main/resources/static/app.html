@@ -430,7 +430,8 @@
 
     if (!isAdmin)   document.getElementById('wh-btn-create').style.display='none';
     if (!canWrite)  document.getElementById('usr-btn-create').style.display='none';
-    if (isReadOnly){ document.getElementById('ord-btn-create').style.display='none'; document.getElementById('sec-btn-create').style.display='none'; document.getElementById('prd-btn-create').style.display='none'; }
+    if (!canWrite)  document.getElementById('sec-btn-create').style.display='none';
+    if (isReadOnly) document.getElementById('prd-btn-create').style.display='none';
 
     document.getElementById('logoutBtn').addEventListener('click', () => AUTH.logout());
 

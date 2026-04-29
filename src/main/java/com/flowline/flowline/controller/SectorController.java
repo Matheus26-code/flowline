@@ -30,14 +30,14 @@ public class SectorController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE', 'OPERATOR', 'ASSISTANT')")
     public ResponseEntity<SectorResponseDTO> getSectorById(@PathVariable Long id) {
         SectorResponseDTO result = sectorService.findSectorById(id);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE', 'OPERATOR', 'ASSISTANT')")
     public ResponseEntity<PageResponseDTO<SectorResponseDTO>> getAllSectors(
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         PageResponseDTO<SectorResponseDTO> result = sectorService.findAllSectors(pageable);

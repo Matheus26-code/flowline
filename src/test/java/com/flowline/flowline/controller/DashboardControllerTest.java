@@ -88,7 +88,7 @@ public class DashboardControllerTest {
     }
 
     @Test
-    public void mustReturn403WhenOperatorTriesToAccessDashboard() throws Exception {
+    public void mustGetDashboardAsOperator() throws Exception {
         User operatorUser = new User();
         operatorUser.setUsername("operator");
         operatorUser.setEmail("operator@test.com");
@@ -113,6 +113,9 @@ public class DashboardControllerTest {
         String operatorToken = objectMapper.readTree(response).get("token").asText();
         mockMvc.perform(get("/api/dashboard")
                         .header("Authorization", "Bearer " + operatorToken))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orders").exists())
+                .andExpect(jsonPath("$.totalProducts").exists())
+                .andExpect(jsonPath("$.totalUsers").exists());
     }
 }

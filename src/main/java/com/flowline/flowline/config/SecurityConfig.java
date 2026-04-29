@@ -54,8 +54,6 @@ public class SecurityConfig {
                         .requestMatchers("/", "/index.html", "/dashboard.html",
                                 "/app.html",
                                 "/css/**", "/js/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/", "/index.html", "/dashboard.html",
-                                "/css/**", "/js/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(authenticationEntryPoint)

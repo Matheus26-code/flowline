@@ -30,14 +30,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE', 'OPERATOR')")
     public ResponseEntity<UserResponseDTO> getUserById (@PathVariable long id) {
         UserResponseDTO result = userService.findUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE', 'OPERATOR')")
     public ResponseEntity<PageResponseDTO<UserResponseDTO>> getAllUsers(
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         PageResponseDTO<UserResponseDTO> result = userService.findAllUsers(pageable);

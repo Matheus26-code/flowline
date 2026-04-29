@@ -42,7 +42,7 @@ public class WarehouseController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE', 'OPERATOR', 'ASSISTANT')")
     public ResponseEntity<PageResponseDTO<WarehouseResponseDTO>> getAllWarehouse(
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         PageResponseDTO<WarehouseResponseDTO> result = warehouseService.findAll(pageable);

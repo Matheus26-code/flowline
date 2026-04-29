@@ -20,7 +20,7 @@ public class AiChatController {
     private final AiChatService aiChatService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGE', 'OPERATOR', 'ASSISTANT')")
     public ResponseEntity<ChatResponseDTO> chat(@RequestBody @Valid ChatRequestDTO request) {
         ChatResponseDTO result = aiChatService.chat(request);
         return ResponseEntity.ok(result);
