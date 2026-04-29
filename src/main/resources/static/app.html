@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>FlowLine — Console</title>
+    <title>FlowLine &mdash; Console</title>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -84,8 +84,7 @@
         .chat-bubble{max-width:85%;padding:.65rem .9rem;border-radius:8px;font-size:.83rem;line-height:1.5}
         .chat-msg.bot .chat-bubble{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:2px}
         .chat-msg.user .chat-bubble{background:rgba(0,229,255,.12);border:1px solid rgba(0,229,255,.2);color:var(--text);border-bottom-right-radius:2px}
-        .chat-msg.loading .chat-bubble::after{content:'●●●';animation:dots 1.2s steps(3,end) infinite;letter-spacing:2px;color:var(--text-muted)}
-        @keyframes dots{0%,20%{content:'●'}40%{content:'●●'}60%,100%{content:'●●●'}}
+        .chat-msg.loading .chat-bubble{color:var(--text-muted);letter-spacing:2px}
         .chat-input-row{display:flex;gap:.5rem;align-items:center}
         .chat-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem .9rem;color:var(--text);font-family:var(--font-mono);font-size:.8rem;outline:none;transition:border-color .2s}
         .chat-input::placeholder{color:var(--text-muted)}.chat-input:focus{border-color:var(--accent)}
@@ -172,17 +171,17 @@
     </div>
     <nav class="sidebar-nav">
         <div class="nav-section-label">Overview</div>
-        <div class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')"><span class="nav-icon">▦</span> Dashboard</div>
+        <div class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')"><span class="nav-icon">&#9638;</span> Dashboard</div>
         <div class="nav-section-label">Manage</div>
-        <div class="nav-item" data-page="warehouses" onclick="navigate('warehouses')"><span class="nav-icon">🏭</span> Warehouses</div>
-        <div class="nav-item" data-page="users" onclick="navigate('users')"><span class="nav-icon">👥</span> Users</div>
-        <div class="nav-item" data-page="sectors" onclick="navigate('sectors')"><span class="nav-icon">📍</span> Sectors</div>
-        <div class="nav-item" data-page="products" onclick="navigate('products')"><span class="nav-icon">📦</span> Products</div>
-        <div class="nav-item" data-page="orders" onclick="navigate('orders')"><span class="nav-icon">🔄</span> Orders</div>
+        <div class="nav-item" data-page="warehouses" onclick="navigate('warehouses')"><span class="nav-icon">&#127981;</span> Warehouses</div>
+        <div class="nav-item" data-page="users" onclick="navigate('users')"><span class="nav-icon">&#128101;</span> Users</div>
+        <div class="nav-item" data-page="sectors" onclick="navigate('sectors')"><span class="nav-icon">&#128205;</span> Sectors</div>
+        <div class="nav-item" data-page="products" onclick="navigate('products')"><span class="nav-icon">&#128230;</span> Products</div>
+        <div class="nav-item" data-page="orders" onclick="navigate('orders')"><span class="nav-icon">&#128257;</span> Orders</div>
     </nav>
     <div class="sidebar-footer">
         <div id="roleBadge" class="role-badge"></div>
-        <button class="btn-logout" id="logoutBtn">⎋ &nbsp;Logout</button>
+        <button class="btn-logout" id="logoutBtn">&#10155; &nbsp;Logout</button>
     </div>
 </aside>
 
@@ -212,14 +211,14 @@
                 </button>
             </div>
             <div class="metrics-grid">
-                <div class="metric-card metric-primary"><div class="metric-label">Total Orders</div><div class="metric-value" id="metricTotal">—</div><div class="metric-sub">all time</div></div>
-                <div class="metric-card"><div class="metric-dot dot-yellow"></div><div class="metric-label">Pending</div><div class="metric-value" id="metricPending">—</div><div class="metric-sub">awaiting dispatch</div></div>
-                <div class="metric-card"><div class="metric-dot dot-blue"></div><div class="metric-label">Delivering</div><div class="metric-value" id="metricDelivering">—</div><div class="metric-sub">in transit</div></div>
-                <div class="metric-card"><div class="metric-dot dot-green"></div><div class="metric-label">Delivered</div><div class="metric-value" id="metricDelivered">—</div><div class="metric-sub">completed</div></div>
-                <div class="metric-card"><div class="metric-dot dot-red"></div><div class="metric-label">Cancelled</div><div class="metric-value" id="metricCancelled">—</div><div class="metric-sub">not fulfilled</div></div>
-                <div class="metric-card"><div class="metric-label">Today's Orders</div><div class="metric-value" id="metricToday">—</div><div class="metric-sub">created today</div></div>
-                <div class="metric-card"><div class="metric-label">Products</div><div class="metric-value" id="metricProducts">—</div><div class="metric-sub">in catalog</div></div>
-                <div class="metric-card"><div class="metric-label">Users</div><div class="metric-value" id="metricUsers">—</div><div class="metric-sub">registered</div></div>
+                <div class="metric-card metric-primary"><div class="metric-label">Total Orders</div><div class="metric-value" id="metricTotal">-</div><div class="metric-sub">all time</div></div>
+                <div class="metric-card"><div class="metric-dot dot-yellow"></div><div class="metric-label">Pending</div><div class="metric-value" id="metricPending">-</div><div class="metric-sub">awaiting dispatch</div></div>
+                <div class="metric-card"><div class="metric-dot dot-blue"></div><div class="metric-label">Delivering</div><div class="metric-value" id="metricDelivering">-</div><div class="metric-sub">in transit</div></div>
+                <div class="metric-card"><div class="metric-dot dot-green"></div><div class="metric-label">Delivered</div><div class="metric-value" id="metricDelivered">-</div><div class="metric-sub">completed</div></div>
+                <div class="metric-card"><div class="metric-dot dot-red"></div><div class="metric-label">Cancelled</div><div class="metric-value" id="metricCancelled">-</div><div class="metric-sub">not fulfilled</div></div>
+                <div class="metric-card"><div class="metric-label">Today's Orders</div><div class="metric-value" id="metricToday">-</div><div class="metric-sub">created today</div></div>
+                <div class="metric-card"><div class="metric-label">Products</div><div class="metric-value" id="metricProducts">-</div><div class="metric-sub">in catalog</div></div>
+                <div class="metric-card"><div class="metric-label">Users</div><div class="metric-value" id="metricUsers">-</div><div class="metric-sub">registered</div></div>
             </div>
             <div class="bottom-row">
                 <div class="chart-card">
@@ -227,9 +226,9 @@
                     <div class="chart-wrap"><canvas id="ordersChart"></canvas></div>
                 </div>
                 <div class="chat-card">
-                    <div class="card-header"><h2>AI Assistant</h2><span class="card-tag ai-tag">Spring AI · Claude</span></div>
+                    <div class="card-header"><h2>AI Assistant</h2><span class="card-tag ai-tag">Spring AI &middot; Claude</span></div>
                     <div class="chat-messages" id="chatMessages">
-                        <div class="chat-msg bot"><div class="chat-bubble">Hello! I'm your FlowLine assistant. Ask me anything about your operations — orders, products, or users.</div></div>
+                        <div class="chat-msg bot"><div class="chat-bubble">Hello! I'm your FlowLine assistant. Ask me anything about your operations &mdash; orders, products, or users.</div></div>
                     </div>
                     <div class="chat-input-row">
                         <input type="text" id="chatInput" class="chat-input" placeholder="How many orders are pending?" maxlength="300"/>
@@ -310,7 +309,7 @@
 <!-- MODAL: WAREHOUSE -->
 <div class="modal-overlay" id="modal-warehouse">
     <div class="modal">
-        <div class="modal-header"><div class="modal-title" id="modal-warehouse-title">New Warehouse</div><button class="modal-close" onclick="closeModal('warehouse')">✕</button></div>
+        <div class="modal-header"><div class="modal-title" id="modal-warehouse-title">New Warehouse</div><button class="modal-close" onclick="closeModal('warehouse')">&times;</button></div>
         <div class="modal-body">
             <input type="hidden" id="wh-id"/>
             <div class="field"><label>Name *</label><input type="text" id="wh-name" placeholder="Warehouse name"/></div>
@@ -329,12 +328,12 @@
 <!-- MODAL: USER -->
 <div class="modal-overlay" id="modal-user">
     <div class="modal">
-        <div class="modal-header"><div class="modal-title" id="modal-user-title">New User</div><button class="modal-close" onclick="closeModal('user')">✕</button></div>
+        <div class="modal-header"><div class="modal-title" id="modal-user-title">New User</div><button class="modal-close" onclick="closeModal('user')">&times;</button></div>
         <div class="modal-body">
             <input type="hidden" id="usr-id"/>
             <div class="field"><label>Username *</label><input type="text" id="usr-username" placeholder="Full name"/></div>
             <div class="field"><label>Email *</label><input type="email" id="usr-email" placeholder="user@company.com"/></div>
-            <div class="field"><label>Password *</label><input type="password" id="usr-password" placeholder="••••••••"/></div>
+            <div class="field"><label>Password *</label><input type="password" id="usr-password" placeholder="password"/></div>
             <div class="field-row">
                 <div class="field"><label>Role *</label><select id="usr-role"><option value="ADMIN">Admin</option><option value="MANAGE">Manager</option><option value="OPERATOR">Operator</option><option value="ASSISTANT">Assistant</option></select></div>
                 <div class="field"><label>Warehouse *</label><select id="usr-warehouseId"></select></div>
@@ -347,7 +346,7 @@
 <!-- MODAL: SECTOR -->
 <div class="modal-overlay" id="modal-sector">
     <div class="modal">
-        <div class="modal-header"><div class="modal-title" id="modal-sector-title">New Sector</div><button class="modal-close" onclick="closeModal('sector')">✕</button></div>
+        <div class="modal-header"><div class="modal-title" id="modal-sector-title">New Sector</div><button class="modal-close" onclick="closeModal('sector')">&times;</button></div>
         <div class="modal-body">
             <input type="hidden" id="sec-id"/>
             <div class="field"><label>Name *</label><input type="text" id="sec-name" placeholder="Sector name"/></div>
@@ -365,7 +364,7 @@
 <!-- MODAL: PRODUCT -->
 <div class="modal-overlay" id="modal-product">
     <div class="modal">
-        <div class="modal-header"><div class="modal-title" id="modal-product-title">New Product</div><button class="modal-close" onclick="closeModal('product')">✕</button></div>
+        <div class="modal-header"><div class="modal-title" id="modal-product-title">New Product</div><button class="modal-close" onclick="closeModal('product')">&times;</button></div>
         <div class="modal-body">
             <input type="hidden" id="prd-id"/>
             <div class="field"><label>Name *</label><input type="text" id="prd-name" placeholder="Product name"/></div>
@@ -383,7 +382,7 @@
 <!-- MODAL: ORDER -->
 <div class="modal-overlay" id="modal-order">
     <div class="modal">
-        <div class="modal-header"><div class="modal-title" id="modal-order-title">New Order</div><button class="modal-close" onclick="closeModal('order')">✕</button></div>
+        <div class="modal-header"><div class="modal-title" id="modal-order-title">New Order</div><button class="modal-close" onclick="closeModal('order')">&times;</button></div>
         <div class="modal-body">
             <input type="hidden" id="ord-id"/>
             <div class="field-row">
@@ -426,7 +425,7 @@
 
     const rb = document.getElementById('roleBadge');
     rb.textContent = role ? role.replace('ROLE_','') : '';
-    rb.className = `role-badge role-${role}`;
+    rb.className = 'role-badge role-' + role;
 
     if (!isAdmin)   document.getElementById('wh-btn-create').style.display='none';
     if (!canWrite)  document.getElementById('usr-btn-create').style.display='none';
@@ -446,193 +445,604 @@
     };
 
     function navigate(page) {
-        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-        document.querySelectorAll('.nav-item[data-page]').forEach(n=>n.classList.remove('active'));
-        document.getElementById(`page-${page}`).classList.add('active');
-        document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
+        document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+        document.querySelectorAll('.nav-item[data-page]').forEach(function(n){n.classList.remove('active');});
+        document.getElementById('page-' + page).classList.add('active');
+        document.querySelector('.nav-item[data-page="' + page + '"]').classList.add('active');
         document.getElementById('topbarTitle').textContent = META[page].title;
         document.getElementById('topbarSub').textContent   = META[page].sub;
-        if (page!=='dashboard') loadPage(page);
+        if (page !== 'dashboard') loadPage(page);
     }
+
     function loadPage(p) {
-        ({warehouses:loadWarehouses,users:loadUsers,sectors:loadSectors,products:loadProducts,orders:loadOrders})[p]?.();
+        var map = {warehouses:loadWarehouses, users:loadUsers, sectors:loadSectors, products:loadProducts, orders:loadOrders};
+        if (map[p]) map[p]();
     }
 
     // TOAST
-    function toast(msg,type='success') {
-        const el=document.createElement('div'); el.className=`toast ${type}`; el.textContent=(type==='success'?'✓ ':'✕ ')+msg;
-        document.getElementById('toastContainer').appendChild(el); setTimeout(()=>el.remove(),3500);
+    function toast(msg, type) {
+        type = type || 'success';
+        var el = document.createElement('div');
+        el.className = 'toast ' + type;
+        el.textContent = (type === 'success' ? 'OK: ' : 'ERR: ') + msg;
+        document.getElementById('toastContainer').appendChild(el);
+        setTimeout(function(){ el.remove(); }, 3500);
     }
 
     // CONFIRM
-    let confirmCb=null;
-    function showConfirm(msg,cb){document.getElementById('confirm-msg').textContent=msg;document.getElementById('confirm-overlay').classList.add('open');confirmCb=cb;}
-    function closeConfirm(){document.getElementById('confirm-overlay').classList.remove('open');confirmCb=null;}
-    document.getElementById('confirm-ok').onclick=()=>{if(confirmCb)confirmCb();closeConfirm();};
+    var confirmCb = null;
+    function showConfirm(msg, cb) {
+        document.getElementById('confirm-msg').textContent = msg;
+        document.getElementById('confirm-overlay').classList.add('open');
+        confirmCb = cb;
+    }
+    function closeConfirm() {
+        document.getElementById('confirm-overlay').classList.remove('open');
+        confirmCb = null;
+    }
+    document.getElementById('confirm-ok').onclick = function() { if (confirmCb) confirmCb(); closeConfirm(); };
 
     // MODAL
-    function openModal(n){document.getElementById(`modal-${n}`).classList.add('open');}
-    function closeModal(n){document.getElementById(`modal-${n}`).classList.remove('open');}
+    function openModal(n) { document.getElementById('modal-' + n).classList.add('open'); }
+    function closeModal(n) { document.getElementById('modal-' + n).classList.remove('open'); }
 
     // API
-    async function api(path,method='GET',body=null){
-        const opts={method,headers:AUTH.headers()};
-        if(body) opts.body=JSON.stringify(body);
-        const res=await fetch(path,opts);
-        if(res.status===401){AUTH.logout();return;}
-        if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.message||`Error ${res.status}`);}
-        if(res.status===204) return null;
+    async function api(path, method, body) {
+        method = method || 'GET';
+        body   = body   || null;
+        var opts = {method: method, headers: AUTH.headers()};
+        if (body) opts.body = JSON.stringify(body);
+        var res = await fetch(path, opts);
+        if (res.status === 401) { AUTH.logout(); return; }
+        if (!res.ok) {
+            var e = await res.json().catch(function(){ return {}; });
+            throw new Error(e.message || ('Error ' + res.status));
+        }
+        if (res.status === 204) return null;
         return res.json();
     }
 
-    function loadingRow(c){return `<tr class="loading-row"><td colspan="${c}">Loading...</td></tr>`;}
-    function emptyRow(c,m='No records found'){return `<tr><td colspan="${c}"><div class="empty-state"><div class="empty-icon">◌</div>${m}</div></td></tr>`;}
-    function renderPagination(id,data,page,fn){
-        const c=document.getElementById(id);
-        if(!data||data.totalPages<=1){c.innerHTML='';return;}
-        c.innerHTML=`<span class="pagination-info">${data.totalElements} records · page ${page+1} of ${data.totalPages}</span><div class="pagination-btns"><button class="btn btn-secondary btn-sm" ${data.first?'disabled':''} onclick="${fn}(${page-1})">← Prev</button><button class="btn btn-secondary btn-sm" ${data.last?'disabled':''} onclick="${fn}(${page+1})">Next →</button></div>`;
+    function loadingRow(c) { return '<tr class="loading-row"><td colspan="' + c + '">Loading...</td></tr>'; }
+    function emptyRow(c, m) {
+        m = m || 'No records found';
+        return '<tr><td colspan="' + c + '"><div class="empty-state"><div class="empty-icon">o</div>' + m + '</div></td></tr>';
     }
-    function populateSelect(id,items,vFn,lFn){document.getElementById(id).innerHTML=items.map(i=>`<option value="${vFn(i)}">${lFn(i)}</option>`).join('');}
 
-    async function getWarehouses(){const d=await api('/api/warehouse?page=0&size=100&sort=id');return d?d.content:[];}
-    async function getAllUsers()   {const d=await api('/api/user?page=0&size=100&sort=id');     return d?d.content:[];}
-    async function getAllSectors() {const d=await api('/api/sector?page=0&size=100&sort=id');   return d?d.content:[];}
-    async function getAllProducts(){const d=await api('/api/product?page=0&size=100&sort=id');  return d?d.content:[];}
+    function renderPagination(id, data, page, fn) {
+        var c = document.getElementById(id);
+        if (!data || data.totalPages <= 1) { c.innerHTML = ''; return; }
+        c.innerHTML =
+            '<span class="pagination-info">' + data.totalElements + ' records &middot; page ' + (page + 1) + ' of ' + data.totalPages + '</span>' +
+            '<div class="pagination-btns">' +
+            '<button class="btn btn-secondary btn-sm" ' + (data.first ? 'disabled' : '') + ' onclick="' + fn + '(' + (page - 1) + ')">&larr; Prev</button>' +
+            '<button class="btn btn-secondary btn-sm" ' + (data.last  ? 'disabled' : '') + ' onclick="' + fn + '(' + (page + 1) + ')">Next &rarr;</button>' +
+            '</div>';
+    }
 
-    // ── DASHBOARD ──
-    let ordersChart=null;
-    function setEl(id,value){const el=document.getElementById(id);if(el){el.classList.remove('skeleton');el.textContent=value??'—';}}
-    function setLoading(ids){ids.forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='···';el.classList.add('skeleton');}});}
+    function populateSelect(id, items, vFn, lFn) {
+        document.getElementById(id).innerHTML = items.map(function(i){
+            return '<option value="' + vFn(i) + '">' + lFn(i) + '</option>';
+        }).join('');
+    }
 
-    async function loadDashboard(){
-        const ids=['metricTotal','metricPending','metricDelivering','metricDelivered','metricCancelled','metricToday','metricProducts','metricUsers'];
+    async function getWarehouses() { var d = await api('/api/warehouse?page=0&size=100&sort=id'); return d ? d.content : []; }
+    async function getAllUsers()    { var d = await api('/api/user?page=0&size=100&sort=id');      return d ? d.content : []; }
+    async function getAllSectors()  { var d = await api('/api/sector?page=0&size=100&sort=id');    return d ? d.content : []; }
+    async function getAllProducts() { var d = await api('/api/product?page=0&size=100&sort=id');   return d ? d.content : []; }
+
+    // DASHBOARD
+    var ordersChart = null;
+
+    function setEl(id, value) {
+        var el = document.getElementById(id);
+        if (el) { el.classList.remove('skeleton'); el.textContent = (value !== null && value !== undefined) ? value : '-'; }
+    }
+    function setLoading(ids) {
+        ids.forEach(function(id){
+            var el = document.getElementById(id);
+            if (el) { el.textContent = '...'; el.classList.add('skeleton'); }
+        });
+    }
+
+    async function loadDashboard() {
+        var ids = ['metricTotal','metricPending','metricDelivering','metricDelivered','metricCancelled','metricToday','metricProducts','metricUsers'];
         setLoading(ids);
-        try{
-            const data=await api('/api/dashboard');
-            const o=data.orders;
-            setEl('metricTotal',o.total);setEl('metricPending',o.pending);setEl('metricDelivering',o.delivering);
-            setEl('metricDelivered',o.delivered);setEl('metricCancelled',o.cancelled);setEl('metricToday',o.createdToday);
-            setEl('metricProducts',data.totalProducts);setEl('metricUsers',data.totalUsers);
+        try {
+            var data = await api('/api/dashboard');
+            var o = data.orders;
+            setEl('metricTotal',      o.total);
+            setEl('metricPending',    o.pending);
+            setEl('metricDelivering', o.delivering);
+            setEl('metricDelivered',  o.delivered);
+            setEl('metricCancelled',  o.cancelled);
+            setEl('metricToday',      o.createdToday);
+            setEl('metricProducts',   data.totalProducts);
+            setEl('metricUsers',      data.totalUsers);
             renderChart(o);
-        }catch(e){ids.forEach(id=>setEl(id,'ERR'));}
+        } catch(e) {
+            ids.forEach(function(id){ setEl(id, 'ERR'); });
+        }
     }
 
-    function renderChart(o){
-        const ctx=document.getElementById('ordersChart');if(!ctx)return;
-        if(ordersChart)ordersChart.destroy();
-        const colors=['#ffd740','#448aff','#00e676','#ff5252'];
-        ordersChart=new Chart(ctx,{type:'doughnut',data:{labels:['Pending','Delivering','Delivered','Cancelled'],datasets:[{data:[o.pending||0,o.delivering||0,o.delivered||0,o.cancelled||0],backgroundColor:colors.map(c=>c+'30'),borderColor:colors.map(c=>c+'cc'),borderWidth:2,hoverBackgroundColor:colors.map(c=>c+'55'),hoverBorderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{position:'right',labels:{color:'#7a8499',font:{family:'Space Mono',size:11},padding:16,boxWidth:12,boxHeight:12}},tooltip:{backgroundColor:'#0f1117',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleColor:'#e8eaf0',bodyColor:'#7a8499',titleFont:{family:'Syne',weight:'700'},bodyFont:{family:'Space Mono',size:11},padding:12,callbacks:{label:ctx=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);const p=t>0?((ctx.raw/t)*100).toFixed(1):0;return`  ${ctx.raw} orders (${p}%)`;}}}}}}});
+    function renderChart(o) {
+        var ctx = document.getElementById('ordersChart');
+        if (!ctx) return;
+        if (ordersChart) ordersChart.destroy();
+        var colors = ['#ffd740','#448aff','#00e676','#ff5252'];
+        ordersChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pending','Delivering','Delivered','Cancelled'],
+                datasets: [{
+                    data: [o.pending||0, o.delivering||0, o.delivered||0, o.cancelled||0],
+                    backgroundColor: colors.map(function(c){ return c + '30'; }),
+                    borderColor:     colors.map(function(c){ return c + 'cc'; }),
+                    borderWidth: 2,
+                    hoverBackgroundColor: colors.map(function(c){ return c + '55'; }),
+                    hoverBorderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '72%',
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { color:'#7a8499', font:{family:'Space Mono',size:11}, padding:16, boxWidth:12, boxHeight:12 }
+                    },
+                    tooltip: {
+                        backgroundColor:'#0f1117', borderColor:'rgba(255,255,255,0.1)', borderWidth:1,
+                        titleColor:'#e8eaf0', bodyColor:'#7a8499',
+                        titleFont:{family:'Syne',weight:'700'}, bodyFont:{family:'Space Mono',size:11},
+                        padding:12,
+                        callbacks: {
+                            label: function(ctx) {
+                                var t = ctx.dataset.data.reduce(function(a,b){ return a+b; }, 0);
+                                var p = t > 0 ? ((ctx.raw / t) * 100).toFixed(1) : 0;
+                                return '  ' + ctx.raw + ' orders (' + p + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     // AI Chat
-    function addMsg(text,role){const w=document.createElement('div');w.className=`chat-msg ${role}`;const b=document.createElement('div');b.className='chat-bubble';b.textContent=text;w.appendChild(b);document.getElementById('chatMessages').appendChild(w);document.getElementById('chatMessages').scrollTop=9999;return w;}
-    function addLoadingMsg(){const w=document.createElement('div');w.className='chat-msg bot loading';const b=document.createElement('div');b.className='chat-bubble';w.appendChild(b);document.getElementById('chatMessages').appendChild(w);document.getElementById('chatMessages').scrollTop=9999;return w;}
-    async function sendMessage(){
-        const inp=document.getElementById('chatInput');const text=inp.value.trim();if(!text)return;
-        inp.value='';document.getElementById('sendBtn').disabled=true;inp.disabled=true;
-        addMsg(text,'user');const loading=addLoadingMsg();
-        try{const data=await api('/api/chat','POST',{ask:text});loading.remove();addMsg(data.answer||'Sorry, I could not process that.','bot');}
-        catch(e){loading.remove();addMsg('Connection error. Please try again.','bot');}
-        finally{document.getElementById('sendBtn').disabled=false;inp.disabled=false;inp.focus();}
+    function addMsg(text, role) {
+        var w = document.createElement('div');
+        w.className = 'chat-msg ' + role;
+        var b = document.createElement('div');
+        b.className = 'chat-bubble';
+        b.textContent = text;
+        w.appendChild(b);
+        document.getElementById('chatMessages').appendChild(w);
+        document.getElementById('chatMessages').scrollTop = 9999;
+        return w;
     }
-    document.getElementById('sendBtn').addEventListener('click',sendMessage);
-    document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
-    document.getElementById('refreshBtn').addEventListener('click',()=>{const btn=document.getElementById('refreshBtn');btn.classList.add('spinning');loadDashboard().finally(()=>setTimeout(()=>btn.classList.remove('spinning'),600));});
+    function addLoadingMsg() {
+        var w = document.createElement('div');
+        w.className = 'chat-msg bot loading';
+        var b = document.createElement('div');
+        b.className = 'chat-bubble';
+        b.textContent = '...';
+        w.appendChild(b);
+        document.getElementById('chatMessages').appendChild(w);
+        document.getElementById('chatMessages').scrollTop = 9999;
+        return w;
+    }
+    async function sendMessage() {
+        var inp  = document.getElementById('chatInput');
+        var text = inp.value.trim();
+        if (!text) return;
+        inp.value = '';
+        document.getElementById('sendBtn').disabled = true;
+        inp.disabled = true;
+        addMsg(text, 'user');
+        var loading = addLoadingMsg();
+        try {
+            var data = await api('/api/chat', 'POST', {ask: text});
+            loading.remove();
+            addMsg(data.answer || 'Sorry, I could not process that.', 'bot');
+        } catch(e) {
+            loading.remove();
+            addMsg('Connection error. Please try again.', 'bot');
+        } finally {
+            document.getElementById('sendBtn').disabled = false;
+            inp.disabled = false;
+            inp.focus();
+        }
+    }
+    document.getElementById('sendBtn').addEventListener('click', sendMessage);
+    document.getElementById('chatInput').addEventListener('keydown', function(e){
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+    document.getElementById('refreshBtn').addEventListener('click', function(){
+        var btn = document.getElementById('refreshBtn');
+        btn.classList.add('spinning');
+        loadDashboard().finally(function(){ setTimeout(function(){ btn.classList.remove('spinning'); }, 600); });
+    });
 
-    // ── WAREHOUSES ──
-    let whPage=0;
-    async function loadWarehouses(page=0){
-        whPage=page;document.getElementById('wh-tbody').innerHTML=loadingRow(6);
-        try{
-            const data=await api(`/api/warehouse?page=${page}&size=10&sort=id`);
-            document.getElementById('wh-count').textContent=`${data.totalElements} warehouses`;
-            const tb=document.getElementById('wh-tbody');
-            if(!data.content.length){tb.innerHTML=emptyRow(6);return;}
-            tb.innerHTML=data.content.map(w=>`<tr><td style="color:var(--text-muted)">#${w.id}</td><td><strong>${w.name}</strong></td><td>${w.city}</td><td>${w.state}</td><td style="font-family:var(--font-mono);font-size:.75rem">${w.zipCode}</td><td><div class="td-actions">${isAdmin?`<button class="btn btn-secondary btn-sm" onclick="editWarehouse(${w.id})">Edit</button>`:''} ${isAdmin?`<button class="btn btn-danger btn-sm" onclick="deleteWarehouse(${w.id},'${w.name}')">Delete</button>`:''} ${!isAdmin?`<span style="color:var(--text-muted);font-size:.72rem;font-family:var(--font-mono)">Read only</span>`:''}</div></td></tr>`).join('');
-            renderPagination('wh-pagination',data,page,'loadWarehouses');
-        }catch(e){toast(e.message,'error');}
+    // WAREHOUSES
+    var whPage = 0;
+    async function loadWarehouses(page) {
+        page = page || 0;
+        whPage = page;
+        document.getElementById('wh-tbody').innerHTML = loadingRow(6);
+        try {
+            var data = await api('/api/warehouse?page=' + page + '&size=10&sort=id');
+            document.getElementById('wh-count').textContent = data.totalElements + ' warehouses';
+            var tb = document.getElementById('wh-tbody');
+            if (!data.content.length) { tb.innerHTML = emptyRow(6); return; }
+            tb.innerHTML = data.content.map(function(w){
+                var actions = '';
+                if (isAdmin) {
+                    actions += '<button class="btn btn-secondary btn-sm" onclick="editWarehouse(' + w.id + ')">Edit</button> ';
+                    actions += '<button class="btn btn-danger btn-sm" onclick="deleteWarehouse(' + w.id + ', this.dataset.name)" data-name="' + w.name.replace(/"/g,'&quot;') + '">Delete</button>';
+                } else {
+                    actions = '<span style="color:var(--text-muted);font-size:.72rem;font-family:var(--font-mono)">Read only</span>';
+                }
+                return '<tr>' +
+                    '<td style="color:var(--text-muted)">#' + w.id + '</td>' +
+                    '<td><strong>' + w.name + '</strong></td>' +
+                    '<td>' + w.city + '</td>' +
+                    '<td>' + w.state + '</td>' +
+                    '<td style="font-family:var(--font-mono);font-size:.75rem">' + w.zipCode + '</td>' +
+                    '<td><div class="td-actions">' + actions + '</div></td>' +
+                    '</tr>';
+            }).join('');
+            renderPagination('wh-pagination', data, page, 'loadWarehouses');
+        } catch(e) { toast(e.message, 'error'); }
     }
-    document.getElementById('wh-btn-create').onclick=()=>{['wh-id','wh-name','wh-description','wh-street','wh-city','wh-state','wh-zipCode'].forEach(id=>document.getElementById(id).value='');document.getElementById('modal-warehouse-title').textContent='New Warehouse';openModal('warehouse');};
-    async function editWarehouse(id){try{const w=await api(`/api/warehouse/${id}`);document.getElementById('wh-id').value=w.id;document.getElementById('wh-name').value=w.name;document.getElementById('wh-description').value=w.description;document.getElementById('wh-street').value=w.street;document.getElementById('wh-city').value=w.city;document.getElementById('wh-state').value=w.state;document.getElementById('wh-zipCode').value=w.zipCode;document.getElementById('modal-warehouse-title').textContent='Edit Warehouse';openModal('warehouse');}catch(e){toast(e.message,'error');}}
-    async function saveWarehouse(){const id=document.getElementById('wh-id').value;const body={name:document.getElementById('wh-name').value,description:document.getElementById('wh-description').value,street:document.getElementById('wh-street').value,city:document.getElementById('wh-city').value,state:document.getElementById('wh-state').value,zipCode:document.getElementById('wh-zipCode').value};try{if(id){await api(`/api/warehouse/${id}`,'PUT',body);toast('Warehouse updated');}else{await api('/api/warehouse','POST',body);toast('Warehouse created');}closeModal('warehouse');loadWarehouses(whPage);}catch(e){toast(e.message,'error');}}
-    async function deleteWarehouse(id,name){showConfirm(`Delete warehouse "${name}"?`,async()=>{try{await api(`/api/warehouse/${id}`,'DELETE');toast('Warehouse deleted');loadWarehouses(whPage);}catch(e){toast(e.message,'error');}});}
+    document.getElementById('wh-btn-create').onclick = function(){
+        ['wh-id','wh-name','wh-description','wh-street','wh-city','wh-state','wh-zipCode'].forEach(function(id){ document.getElementById(id).value = ''; });
+        document.getElementById('modal-warehouse-title').textContent = 'New Warehouse';
+        openModal('warehouse');
+    };
+    async function editWarehouse(id) {
+        try {
+            var w = await api('/api/warehouse/' + id);
+            document.getElementById('wh-id').value          = w.id;
+            document.getElementById('wh-name').value        = w.name;
+            document.getElementById('wh-description').value = w.description;
+            document.getElementById('wh-street').value      = w.street;
+            document.getElementById('wh-city').value        = w.city;
+            document.getElementById('wh-state').value       = w.state;
+            document.getElementById('wh-zipCode').value     = w.zipCode;
+            document.getElementById('modal-warehouse-title').textContent = 'Edit Warehouse';
+            openModal('warehouse');
+        } catch(e) { toast(e.message, 'error'); }
+    }
+    async function saveWarehouse() {
+        var id   = document.getElementById('wh-id').value;
+        var body = {
+            name:        document.getElementById('wh-name').value,
+            description: document.getElementById('wh-description').value,
+            street:      document.getElementById('wh-street').value,
+            city:        document.getElementById('wh-city').value,
+            state:       document.getElementById('wh-state').value,
+            zipCode:     document.getElementById('wh-zipCode').value
+        };
+        try {
+            if (id) { await api('/api/warehouse/' + id, 'PUT', body); toast('Warehouse updated'); }
+            else    { await api('/api/warehouse', 'POST', body);       toast('Warehouse created'); }
+            closeModal('warehouse');
+            loadWarehouses(whPage);
+        } catch(e) { toast(e.message, 'error'); }
+    }
+    function deleteWarehouse(id, name) {
+        showConfirm('Delete warehouse "' + name + '"?', async function(){
+            try { await api('/api/warehouse/' + id, 'DELETE'); toast('Warehouse deleted'); loadWarehouses(whPage); }
+            catch(e) { toast(e.message, 'error'); }
+        });
+    }
 
-    // ── USERS ──
-    let usrPage=0;
-    async function loadUsers(page=0){
-        usrPage=page;document.getElementById('usr-tbody').innerHTML=loadingRow(6);
-        try{
-            const data=await api(`/api/user?page=${page}&size=10&sort=id`);
-            document.getElementById('usr-count').textContent=`${data.totalElements} users`;
-            const tb=document.getElementById('usr-tbody');
-            if(!data.content.length){tb.innerHTML=emptyRow(6);return;}
-            tb.innerHTML=data.content.map(u=>`<tr><td style="color:var(--text-muted)">#${u.id}</td><td>${u.username}</td><td style="font-family:var(--font-mono);font-size:.75rem">${u.email}</td><td style="font-family:var(--font-mono);font-size:.7rem;color:var(--text-dim)">${u.role}</td><td>#${u.warehouseId}</td><td><div class="td-actions">${canWrite?`<button class="btn btn-secondary btn-sm" onclick="editUser(${u.id})">Edit</button>`:''} ${isAdmin?`<button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id},'${u.username}')">Delete</button>`:''}</div></td></tr>`).join('');
-            renderPagination('usr-pagination',data,page,'loadUsers');
-        }catch(e){toast(e.message,'error');}
+    // USERS
+    var usrPage = 0;
+    async function loadUsers(page) {
+        page = page || 0;
+        usrPage = page;
+        document.getElementById('usr-tbody').innerHTML = loadingRow(6);
+        try {
+            var data = await api('/api/user?page=' + page + '&size=10&sort=id');
+            document.getElementById('usr-count').textContent = data.totalElements + ' users';
+            var tb = document.getElementById('usr-tbody');
+            if (!data.content.length) { tb.innerHTML = emptyRow(6); return; }
+            tb.innerHTML = data.content.map(function(u){
+                var actions = '';
+                if (canWrite) actions += '<button class="btn btn-secondary btn-sm" onclick="editUser(' + u.id + ')">Edit</button> ';
+                if (isAdmin)  actions += '<button class="btn btn-danger btn-sm" onclick="deleteUser(' + u.id + ', this.dataset.name)" data-name="' + u.username.replace(/"/g,'&quot;') + '">Delete</button>';
+                return '<tr>' +
+                    '<td style="color:var(--text-muted)">#' + u.id + '</td>' +
+                    '<td>' + u.username + '</td>' +
+                    '<td style="font-family:var(--font-mono);font-size:.75rem">' + u.email + '</td>' +
+                    '<td style="font-family:var(--font-mono);font-size:.7rem;color:var(--text-dim)">' + u.role + '</td>' +
+                    '<td>#' + u.warehouseId + '</td>' +
+                    '<td><div class="td-actions">' + actions + '</div></td>' +
+                    '</tr>';
+            }).join('');
+            renderPagination('usr-pagination', data, page, 'loadUsers');
+        } catch(e) { toast(e.message, 'error'); }
     }
-    document.getElementById('usr-btn-create').onclick=async()=>{['usr-id','usr-username','usr-email','usr-password'].forEach(id=>document.getElementById(id).value='');document.getElementById('modal-user-title').textContent='New User';const whs=await getWarehouses();populateSelect('usr-warehouseId',whs,w=>w.id,w=>w.name);openModal('user');};
-    async function editUser(id){try{const u=await api(`/api/user/${id}`);document.getElementById('usr-id').value=u.id;document.getElementById('usr-username').value=u.username;document.getElementById('usr-email').value=u.email;document.getElementById('usr-password').value='';document.getElementById('usr-role').value=u.role;document.getElementById('modal-user-title').textContent='Edit User';const whs=await getWarehouses();populateSelect('usr-warehouseId',whs,w=>w.id,w=>w.name);document.getElementById('usr-warehouseId').value=u.warehouseId;openModal('user');}catch(e){toast(e.message,'error');}}
-    async function saveUser(){const id=document.getElementById('usr-id').value;const body={username:document.getElementById('usr-username').value,email:document.getElementById('usr-email').value,password:document.getElementById('usr-password').value,role:document.getElementById('usr-role').value,warehouseId:Number(document.getElementById('usr-warehouseId').value)};try{if(id){await api(`/api/user/${id}`,'PUT',body);toast('User updated');}else{await api('/api/user','POST',body);toast('User created');}closeModal('user');loadUsers(usrPage);}catch(e){toast(e.message,'error');}}
-    async function deleteUser(id,name){showConfirm(`Delete user "${name}"?`,async()=>{try{await api(`/api/user/${id}`,'DELETE');toast('User deleted');loadUsers(usrPage);}catch(e){toast(e.message,'error');}});}
+    document.getElementById('usr-btn-create').onclick = async function(){
+        ['usr-id','usr-username','usr-email','usr-password'].forEach(function(id){ document.getElementById(id).value = ''; });
+        document.getElementById('modal-user-title').textContent = 'New User';
+        var whs = await getWarehouses();
+        populateSelect('usr-warehouseId', whs, function(w){ return w.id; }, function(w){ return w.name; });
+        openModal('user');
+    };
+    async function editUser(id) {
+        try {
+            var u = await api('/api/user/' + id);
+            document.getElementById('usr-id').value       = u.id;
+            document.getElementById('usr-username').value = u.username;
+            document.getElementById('usr-email').value    = u.email;
+            document.getElementById('usr-password').value = '';
+            document.getElementById('usr-role').value     = u.role;
+            document.getElementById('modal-user-title').textContent = 'Edit User';
+            var whs = await getWarehouses();
+            populateSelect('usr-warehouseId', whs, function(w){ return w.id; }, function(w){ return w.name; });
+            document.getElementById('usr-warehouseId').value = u.warehouseId;
+            openModal('user');
+        } catch(e) { toast(e.message, 'error'); }
+    }
+    async function saveUser() {
+        var id   = document.getElementById('usr-id').value;
+        var body = {
+            username:    document.getElementById('usr-username').value,
+            email:       document.getElementById('usr-email').value,
+            password:    document.getElementById('usr-password').value,
+            role:        document.getElementById('usr-role').value,
+            warehouseId: Number(document.getElementById('usr-warehouseId').value)
+        };
+        try {
+            if (id) { await api('/api/user/' + id, 'PUT', body); toast('User updated'); }
+            else    { await api('/api/user', 'POST', body);       toast('User created'); }
+            closeModal('user');
+            loadUsers(usrPage);
+        } catch(e) { toast(e.message, 'error'); }
+    }
+    function deleteUser(id, name) {
+        showConfirm('Delete user "' + name + '"?', async function(){
+            try { await api('/api/user/' + id, 'DELETE'); toast('User deleted'); loadUsers(usrPage); }
+            catch(e) { toast(e.message, 'error'); }
+        });
+    }
 
-    // ── SECTORS ──
-    let secPage=0;
-    async function loadSectors(page=0){
-        secPage=page;document.getElementById('sec-tbody').innerHTML=loadingRow(6);
-        try{
-            const data=await api(`/api/sector?page=${page}&size=10&sort=id`);
-            document.getElementById('sec-count').textContent=`${data.totalElements} sectors`;
-            const tb=document.getElementById('sec-tbody');
-            if(!data.content.length){tb.innerHTML=emptyRow(6);return;}
-            tb.innerHTML=data.content.map(s=>`<tr><td style="color:var(--text-muted)">#${s.id}</td><td><strong>${s.name}</strong></td><td>${s.description}</td><td>${s.building||'—'}</td><td>#${s.responsibleId}</td><td><div class="td-actions">${canWrite?`<button class="btn btn-secondary btn-sm" onclick="editSector(${s.id})">Edit</button>`:''} ${isAdmin?`<button class="btn btn-danger btn-sm" onclick="deleteSector(${s.id},'${s.name}')">Delete</button>`:''}</div></td></tr>`).join('');
-            renderPagination('sec-pagination',data,page,'loadSectors');
-        }catch(e){toast(e.message,'error');}
+    // SECTORS
+    var secPage = 0;
+    async function loadSectors(page) {
+        page = page || 0;
+        secPage = page;
+        document.getElementById('sec-tbody').innerHTML = loadingRow(6);
+        try {
+            var data = await api('/api/sector?page=' + page + '&size=10&sort=id');
+            document.getElementById('sec-count').textContent = data.totalElements + ' sectors';
+            var tb = document.getElementById('sec-tbody');
+            if (!data.content.length) { tb.innerHTML = emptyRow(6); return; }
+            tb.innerHTML = data.content.map(function(s){
+                var actions = '';
+                if (canWrite) actions += '<button class="btn btn-secondary btn-sm" onclick="editSector(' + s.id + ')">Edit</button> ';
+                if (isAdmin)  actions += '<button class="btn btn-danger btn-sm" onclick="deleteSector(' + s.id + ', this.dataset.name)" data-name="' + s.name.replace(/"/g,'&quot;') + '">Delete</button>';
+                return '<tr>' +
+                    '<td style="color:var(--text-muted)">#' + s.id + '</td>' +
+                    '<td><strong>' + s.name + '</strong></td>' +
+                    '<td>' + s.description + '</td>' +
+                    '<td>' + (s.building || '-') + '</td>' +
+                    '<td>#' + s.responsibleId + '</td>' +
+                    '<td><div class="td-actions">' + actions + '</div></td>' +
+                    '</tr>';
+            }).join('');
+            renderPagination('sec-pagination', data, page, 'loadSectors');
+        } catch(e) { toast(e.message, 'error'); }
     }
-    document.getElementById('sec-btn-create').onclick=async()=>{['sec-id','sec-name','sec-description','sec-building'].forEach(id=>document.getElementById(id).value='');document.getElementById('modal-sector-title').textContent='New Sector';const[whs,usrs]=await Promise.all([getWarehouses(),getAllUsers()]);populateSelect('sec-warehouseId',whs,w=>w.id,w=>w.name);populateSelect('sec-responsibleId',usrs,u=>u.id,u=>u.username);openModal('sector');};
-    async function editSector(id){try{const s=await api(`/api/sector/${id}`);document.getElementById('sec-id').value=s.id;document.getElementById('sec-name').value=s.name;document.getElementById('sec-description').value=s.description;document.getElementById('sec-building').value=s.building||'';document.getElementById('modal-sector-title').textContent='Edit Sector';const[whs,usrs]=await Promise.all([getWarehouses(),getAllUsers()]);populateSelect('sec-warehouseId',whs,w=>w.id,w=>w.name);populateSelect('sec-responsibleId',usrs,u=>u.id,u=>u.username);document.getElementById('sec-responsibleId').value=s.responsibleId;document.getElementById('sec-warehouseId').value=s.warehouseId;openModal('sector');}catch(e){toast(e.message,'error');}}
-    async function saveSector(){const id=document.getElementById('sec-id').value;const body={name:document.getElementById('sec-name').value,description:document.getElementById('sec-description').value,building:document.getElementById('sec-building').value,responsibleId:Number(document.getElementById('sec-responsibleId').value),warehouseId:Number(document.getElementById('sec-warehouseId').value)};try{if(id){await api(`/api/sector/${id}`,'PUT',body);toast('Sector updated');}else{await api('/api/sector','POST',body);toast('Sector created');}closeModal('sector');loadSectors(secPage);}catch(e){toast(e.message,'error');}}
-    async function deleteSector(id,name){showConfirm(`Delete sector "${name}"?`,async()=>{try{await api(`/api/sector/${id}`,'DELETE');toast('Sector deleted');loadSectors(secPage);}catch(e){toast(e.message,'error');}});}
+    document.getElementById('sec-btn-create').onclick = async function(){
+        ['sec-id','sec-name','sec-description','sec-building'].forEach(function(id){ document.getElementById(id).value = ''; });
+        document.getElementById('modal-sector-title').textContent = 'New Sector';
+        var results = await Promise.all([getWarehouses(), getAllUsers()]);
+        populateSelect('sec-warehouseId',   results[0], function(w){ return w.id; }, function(w){ return w.name; });
+        populateSelect('sec-responsibleId', results[1], function(u){ return u.id; }, function(u){ return u.username; });
+        openModal('sector');
+    };
+    async function editSector(id) {
+        try {
+            var s = await api('/api/sector/' + id);
+            document.getElementById('sec-id').value          = s.id;
+            document.getElementById('sec-name').value        = s.name;
+            document.getElementById('sec-description').value = s.description;
+            document.getElementById('sec-building').value    = s.building || '';
+            document.getElementById('modal-sector-title').textContent = 'Edit Sector';
+            var results = await Promise.all([getWarehouses(), getAllUsers()]);
+            populateSelect('sec-warehouseId',   results[0], function(w){ return w.id; }, function(w){ return w.name; });
+            populateSelect('sec-responsibleId', results[1], function(u){ return u.id; }, function(u){ return u.username; });
+            document.getElementById('sec-responsibleId').value = s.responsibleId;
+            document.getElementById('sec-warehouseId').value   = s.warehouseId;
+            openModal('sector');
+        } catch(e) { toast(e.message, 'error'); }
+    }
+    async function saveSector() {
+        var id   = document.getElementById('sec-id').value;
+        var body = {
+            name:          document.getElementById('sec-name').value,
+            description:   document.getElementById('sec-description').value,
+            building:      document.getElementById('sec-building').value,
+            responsibleId: Number(document.getElementById('sec-responsibleId').value),
+            warehouseId:   Number(document.getElementById('sec-warehouseId').value)
+        };
+        try {
+            if (id) { await api('/api/sector/' + id, 'PUT', body); toast('Sector updated'); }
+            else    { await api('/api/sector', 'POST', body);       toast('Sector created'); }
+            closeModal('sector');
+            loadSectors(secPage);
+        } catch(e) { toast(e.message, 'error'); }
+    }
+    function deleteSector(id, name) {
+        showConfirm('Delete sector "' + name + '"?', async function(){
+            try { await api('/api/sector/' + id, 'DELETE'); toast('Sector deleted'); loadSectors(secPage); }
+            catch(e) { toast(e.message, 'error'); }
+        });
+    }
 
-    // ── PRODUCTS ──
-    let prdPage=0;
-    async function loadProducts(page=0){
-        prdPage=page;document.getElementById('prd-tbody').innerHTML=loadingRow(6);
-        try{
-            const data=await api(`/api/product?page=${page}&size=10&sort=id`);
-            document.getElementById('prd-count').textContent=`${data.totalElements} products`;
-            const tb=document.getElementById('prd-tbody');
-            if(!data.content.length){tb.innerHTML=emptyRow(6);return;}
-            tb.innerHTML=data.content.map(p=>`<tr><td style="color:var(--text-muted)">#${p.id}</td><td><strong>${p.name}</strong></td><td style="font-family:var(--font-mono)">${p.weight}</td><td>${p.unit}</td><td style="font-family:var(--font-mono);font-size:.75rem">${p.location}</td><td><div class="td-actions">${canWrite?`<button class="btn btn-secondary btn-sm" onclick="editProduct(${p.id})">Edit</button>`:''} ${canWrite?`<button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id},'${p.name}')">Delete</button>`:''}</div></td></tr>`).join('');
-            renderPagination('prd-pagination',data,page,'loadProducts');
-        }catch(e){toast(e.message,'error');}
+    // PRODUCTS
+    var prdPage = 0;
+    async function loadProducts(page) {
+        page = page || 0;
+        prdPage = page;
+        document.getElementById('prd-tbody').innerHTML = loadingRow(6);
+        try {
+            var data = await api('/api/product?page=' + page + '&size=10&sort=id');
+            document.getElementById('prd-count').textContent = data.totalElements + ' products';
+            var tb = document.getElementById('prd-tbody');
+            if (!data.content.length) { tb.innerHTML = emptyRow(6); return; }
+            tb.innerHTML = data.content.map(function(p){
+                var actions = '';
+                if (canWrite) {
+                    actions += '<button class="btn btn-secondary btn-sm" onclick="editProduct(' + p.id + ')">Edit</button> ';
+                    actions += '<button class="btn btn-danger btn-sm" onclick="deleteProduct(' + p.id + ', this.dataset.name)" data-name="' + p.name.replace(/"/g,'&quot;') + '">Delete</button>';
+                }
+                return '<tr>' +
+                    '<td style="color:var(--text-muted)">#' + p.id + '</td>' +
+                    '<td><strong>' + p.name + '</strong></td>' +
+                    '<td style="font-family:var(--font-mono)">' + p.weight + '</td>' +
+                    '<td>' + p.unit + '</td>' +
+                    '<td style="font-family:var(--font-mono);font-size:.75rem">' + p.location + '</td>' +
+                    '<td><div class="td-actions">' + actions + '</div></td>' +
+                    '</tr>';
+            }).join('');
+            renderPagination('prd-pagination', data, page, 'loadProducts');
+        } catch(e) { toast(e.message, 'error'); }
     }
-    document.getElementById('prd-btn-create').onclick=async()=>{['prd-id','prd-name','prd-weight','prd-unit','prd-location'].forEach(id=>document.getElementById(id).value='');document.getElementById('modal-product-title').textContent='New Product';const whs=await getWarehouses();populateSelect('prd-warehouseId',whs,w=>w.id,w=>w.name);openModal('product');};
-    async function editProduct(id){try{const p=await api(`/api/product/${id}`);document.getElementById('prd-id').value=p.id;document.getElementById('prd-name').value=p.name;document.getElementById('prd-weight').value=p.weight;document.getElementById('prd-unit').value=p.unit;document.getElementById('prd-location').value=p.location;document.getElementById('modal-product-title').textContent='Edit Product';const whs=await getWarehouses();populateSelect('prd-warehouseId',whs,w=>w.id,w=>w.name);document.getElementById('prd-warehouseId').value=p.warehouseId;openModal('product');}catch(e){toast(e.message,'error');}}
-    async function saveProduct(){const id=document.getElementById('prd-id').value;const body={name:document.getElementById('prd-name').value,weight:Number(document.getElementById('prd-weight').value),unit:document.getElementById('prd-unit').value,location:document.getElementById('prd-location').value,warehouseId:Number(document.getElementById('prd-warehouseId').value)};try{if(id){await api(`/api/product/${id}`,'PUT',body);toast('Product updated');}else{await api('/api/product','POST',body);toast('Product created');}closeModal('product');loadProducts(prdPage);}catch(e){toast(e.message,'error');}}
-    async function deleteProduct(id,name){showConfirm(`Delete product "${name}"?`,async()=>{try{await api(`/api/product/${id}`,'DELETE');toast('Product deleted');loadProducts(prdPage);}catch(e){toast(e.message,'error');}});}
+    document.getElementById('prd-btn-create').onclick = async function(){
+        ['prd-id','prd-name','prd-weight','prd-unit','prd-location'].forEach(function(id){ document.getElementById(id).value = ''; });
+        document.getElementById('modal-product-title').textContent = 'New Product';
+        var whs = await getWarehouses();
+        populateSelect('prd-warehouseId', whs, function(w){ return w.id; }, function(w){ return w.name; });
+        openModal('product');
+    };
+    async function editProduct(id) {
+        try {
+            var p = await api('/api/product/' + id);
+            document.getElementById('prd-id').value       = p.id;
+            document.getElementById('prd-name').value     = p.name;
+            document.getElementById('prd-weight').value   = p.weight;
+            document.getElementById('prd-unit').value     = p.unit;
+            document.getElementById('prd-location').value = p.location;
+            document.getElementById('modal-product-title').textContent = 'Edit Product';
+            var whs = await getWarehouses();
+            populateSelect('prd-warehouseId', whs, function(w){ return w.id; }, function(w){ return w.name; });
+            document.getElementById('prd-warehouseId').value = p.warehouseId;
+            openModal('product');
+        } catch(e) { toast(e.message, 'error'); }
+    }
+    async function saveProduct() {
+        var id   = document.getElementById('prd-id').value;
+        var body = {
+            name:        document.getElementById('prd-name').value,
+            weight:      Number(document.getElementById('prd-weight').value),
+            unit:        document.getElementById('prd-unit').value,
+            location:    document.getElementById('prd-location').value,
+            warehouseId: Number(document.getElementById('prd-warehouseId').value)
+        };
+        try {
+            if (id) { await api('/api/product/' + id, 'PUT', body); toast('Product updated'); }
+            else    { await api('/api/product', 'POST', body);       toast('Product created'); }
+            closeModal('product');
+            loadProducts(prdPage);
+        } catch(e) { toast(e.message, 'error'); }
+    }
+    function deleteProduct(id, name) {
+        showConfirm('Delete product "' + name + '"?', async function(){
+            try { await api('/api/product/' + id, 'DELETE'); toast('Product deleted'); loadProducts(prdPage); }
+            catch(e) { toast(e.message, 'error'); }
+        });
+    }
 
-    // ── ORDERS ──
-    let ordPage=0;
-    async function loadOrders(page=0){
-        ordPage=page;document.getElementById('ord-tbody').innerHTML=loadingRow(7);
-        try{
-            const data=await api(`/api/orders?page=${page}&size=10&sort=id`);
-            document.getElementById('ord-count').textContent=`${data.totalElements} orders`;
-            const tb=document.getElementById('ord-tbody');
-            if(!data.content.length){tb.innerHTML=emptyRow(7);return;}
-            tb.innerHTML=data.content.map(o=>`<tr><td style="color:var(--text-muted)">#${o.id}</td><td>#${o.originSectorId}</td><td>#${o.destinationSectorId}</td><td>#${o.productId}</td><td style="font-family:var(--font-mono)">${o.quantity}</td><td><span class="badge badge-${o.status.toLowerCase()}">${o.status}</span></td><td><div class="td-actions">${canWrite?`<button class="btn btn-secondary btn-sm" onclick="editOrder(${o.id})">Edit</button>`:''} ${canWrite?`<button class="btn btn-danger btn-sm" onclick="deleteOrder(${o.id})">Delete</button>`:''}</div></td></tr>`).join('');
-            renderPagination('ord-pagination',data,page,'loadOrders');
-        }catch(e){toast(e.message,'error');}
+    // ORDERS
+    var ordPage = 0;
+    async function loadOrders(page) {
+        page = page || 0;
+        ordPage = page;
+        document.getElementById('ord-tbody').innerHTML = loadingRow(7);
+        try {
+            var data = await api('/api/orders?page=' + page + '&size=10&sort=id');
+            document.getElementById('ord-count').textContent = data.totalElements + ' orders';
+            var tb = document.getElementById('ord-tbody');
+            if (!data.content.length) { tb.innerHTML = emptyRow(7); return; }
+            tb.innerHTML = data.content.map(function(o){
+                var actions = '';
+                if (canWrite) {
+                    actions += '<button class="btn btn-secondary btn-sm" onclick="editOrder(' + o.id + ')">Edit</button> ';
+                    actions += '<button class="btn btn-danger btn-sm" onclick="deleteOrder(' + o.id + ')">Delete</button>';
+                }
+                return '<tr>' +
+                    '<td style="color:var(--text-muted)">#' + o.id + '</td>' +
+                    '<td>#' + o.originSectorId + '</td>' +
+                    '<td>#' + o.destinationSectorId + '</td>' +
+                    '<td>#' + o.productId + '</td>' +
+                    '<td style="font-family:var(--font-mono)">' + o.quantity + '</td>' +
+                    '<td><span class="badge badge-' + o.status.toLowerCase() + '">' + o.status + '</span></td>' +
+                    '<td><div class="td-actions">' + actions + '</div></td>' +
+                    '</tr>';
+            }).join('');
+            renderPagination('ord-pagination', data, page, 'loadOrders');
+        } catch(e) { toast(e.message, 'error'); }
     }
-    document.getElementById('ord-btn-create').onclick=async()=>{['ord-id','ord-quantity'].forEach(id=>document.getElementById(id).value='');document.getElementById('modal-order-title').textContent='New Order';const[sectors,products,users]=await Promise.all([getAllSectors(),getAllProducts(),getAllUsers()]);populateSelect('ord-originSectorId',sectors,s=>s.id,s=>s.name);populateSelect('ord-destinationSectorId',sectors,s=>s.id,s=>s.name);populateSelect('ord-productId',products,p=>p.id,p=>p.name);populateSelect('ord-userId',users,u=>u.id,u=>u.username);openModal('order');};
-    async function editOrder(id){try{const o=await api(`/api/orders/${id}`);document.getElementById('ord-id').value=o.id;document.getElementById('ord-quantity').value=o.quantity;document.getElementById('modal-order-title').textContent='Edit Order';const[sectors,products,users]=await Promise.all([getAllSectors(),getAllProducts(),getAllUsers()]);populateSelect('ord-originSectorId',sectors,s=>s.id,s=>s.name);populateSelect('ord-destinationSectorId',sectors,s=>s.id,s=>s.name);populateSelect('ord-productId',products,p=>p.id,p=>p.name);populateSelect('ord-userId',users,u=>u.id,u=>u.username);document.getElementById('ord-originSectorId').value=o.originSectorId;document.getElementById('ord-destinationSectorId').value=o.destinationSectorId;document.getElementById('ord-productId').value=o.productId;document.getElementById('ord-userId').value=o.userId;openModal('order');}catch(e){toast(e.message,'error');}}
-    async function saveOrder(){const id=document.getElementById('ord-id').value;const body={originSectorId:Number(document.getElementById('ord-originSectorId').value),destinationSectorId:Number(document.getElementById('ord-destinationSectorId').value),productId:Number(document.getElementById('ord-productId').value),userId:Number(document.getElementById('ord-userId').value),quantity:Number(document.getElementById('ord-quantity').value)};try{if(id){await api(`/api/orders/${id}`,'PUT',body);toast('Order updated');}else{await api('/api/orders','POST',body);toast('Order created');}closeModal('order');loadOrders(ordPage);}catch(e){toast(e.message,'error');}}
-    async function deleteOrder(id){showConfirm(`Delete order #${id}?`,async()=>{try{await api(`/api/orders/${id}`,'DELETE');toast('Order deleted');loadOrders(ordPage);}catch(e){toast(e.message,'error');}});}
+    document.getElementById('ord-btn-create').onclick = async function(){
+        ['ord-id','ord-quantity'].forEach(function(id){ document.getElementById(id).value = ''; });
+        document.getElementById('modal-order-title').textContent = 'New Order';
+        var results = await Promise.all([getAllSectors(), getAllProducts(), getAllUsers()]);
+        populateSelect('ord-originSectorId',      results[0], function(s){ return s.id; }, function(s){ return s.name; });
+        populateSelect('ord-destinationSectorId', results[0], function(s){ return s.id; }, function(s){ return s.name; });
+        populateSelect('ord-productId',           results[1], function(p){ return p.id; }, function(p){ return p.name; });
+        populateSelect('ord-userId',              results[2], function(u){ return u.id; }, function(u){ return u.username; });
+        openModal('order');
+    };
+    async function editOrder(id) {
+        try {
+            var o = await api('/api/orders/' + id);
+            document.getElementById('ord-id').value       = o.id;
+            document.getElementById('ord-quantity').value = o.quantity;
+            document.getElementById('modal-order-title').textContent = 'Edit Order';
+            var results = await Promise.all([getAllSectors(), getAllProducts(), getAllUsers()]);
+            populateSelect('ord-originSectorId',      results[0], function(s){ return s.id; }, function(s){ return s.name; });
+            populateSelect('ord-destinationSectorId', results[0], function(s){ return s.id; }, function(s){ return s.name; });
+            populateSelect('ord-productId',           results[1], function(p){ return p.id; }, function(p){ return p.name; });
+            populateSelect('ord-userId',              results[2], function(u){ return u.id; }, function(u){ return u.username; });
+            document.getElementById('ord-originSectorId').value      = o.originSectorId;
+            document.getElementById('ord-destinationSectorId').value = o.destinationSectorId;
+            document.getElementById('ord-productId').value           = o.productId;
+            document.getElementById('ord-userId').value              = o.userId;
+            openModal('order');
+        } catch(e) { toast(e.message, 'error'); }
+    }
+    async function saveOrder() {
+        var id   = document.getElementById('ord-id').value;
+        var body = {
+            originSectorId:      Number(document.getElementById('ord-originSectorId').value),
+            destinationSectorId: Number(document.getElementById('ord-destinationSectorId').value),
+            productId:           Number(document.getElementById('ord-productId').value),
+            userId:              Number(document.getElementById('ord-userId').value),
+            quantity:            Number(document.getElementById('ord-quantity').value)
+        };
+        try {
+            if (id) { await api('/api/orders/' + id, 'PUT', body); toast('Order updated'); }
+            else    { await api('/api/orders', 'POST', body);       toast('Order created'); }
+            closeModal('order');
+            loadOrders(ordPage);
+        } catch(e) { toast(e.message, 'error'); }
+    }
+    function deleteOrder(id) {
+        showConfirm('Delete order #' + id + '?', async function(){
+            try { await api('/api/orders/' + id, 'DELETE'); toast('Order deleted'); loadOrders(ordPage); }
+            catch(e) { toast(e.message, 'error'); }
+        });
+    }
 
     // INIT
-    document.getElementById('dashDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    document.getElementById('dashDate').textContent = new Date().toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
     loadDashboard();
-    setInterval(loadDashboard,60000);
+    setInterval(loadDashboard, 60000);
 </script>
 </body>
 </html>

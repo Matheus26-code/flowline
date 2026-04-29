@@ -11,6 +11,7 @@ import com.flowline.flowline.model.Warehouse;
 import com.flowline.flowline.repository.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.SoftDelete;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@SoftDelete
 public class WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
