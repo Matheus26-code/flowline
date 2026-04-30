@@ -8,7 +8,7 @@ import com.flowline.flowline.exception.ResourceNotFoundException;
 import com.flowline.flowline.model.User;
 import com.flowline.flowline.model.UserRole;
 import com.flowline.flowline.model.Warehouse;
-import com.flowline.flowline.repository.WarehouseRepository;
+import com.flowline.flowline.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +31,14 @@ public class WarehouseServiceTest {
 
     @Mock
     WarehouseRepository warehouseRepository;
+    @Mock
+    SectorRepository sectorRepository;
+    @Mock
+    ProductRepository productRepository;
+    @Mock
+    UserRepository userRepository;
+    @Mock
+    OrderRepository orderRepository;
 
     @InjectMocks
     WarehouseService warehouseService;
@@ -152,7 +160,12 @@ public class WarehouseServiceTest {
     @Test
     public void mustDeleteWarehouseById() {
         when(warehouseRepository.existsById(1L)).thenReturn(true);
+        when(sectorRepository.findByWarehouseId(1L)).thenReturn(Collections.emptyList());
+        when(productRepository.findByWarehouseId(1L)).thenReturn(Collections.emptyList());
+        when(userRepository.findByWarehouseId(1L)).thenReturn(Collections.emptyList());
+
         warehouseService.deleteById(1L);
+
         verify(warehouseRepository).deleteById(1L);
     }
 

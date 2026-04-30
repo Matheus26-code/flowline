@@ -5,27 +5,27 @@ import com.flowline.flowline.dto.WarehouseRequestDTO;
 import com.flowline.flowline.dto.WarehouseResponseDTO;
 import com.flowline.flowline.exception.ForbiddenAccessException;
 import com.flowline.flowline.exception.ResourceNotFoundException;
-import com.flowline.flowline.model.User;
-import com.flowline.flowline.model.UserRole;
-import com.flowline.flowline.model.Warehouse;
-import com.flowline.flowline.repository.WarehouseRepository;
+import com.flowline.flowline.model.*;
+import com.flowline.flowline.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.SoftDelete;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@SoftDelete
 public class WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
+    private final UserRepository  userRepository;
+    private final SectorRepository sectorRepository;
+    private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
 
     private WarehouseResponseDTO toResponse(Warehouse warehouse) {
         return new WarehouseResponseDTO(
@@ -104,12 +104,42 @@ public class WarehouseService {
         return result;
     }
 
+    @Transactional
     public void deleteById(Long id) {
         log.info("Deleting warehouse by id: {}", id);
         if (!warehouseRepository.existsById(id)) {
             log.warn("Warehouse not found for deletion: id={}", id);
             throw new ResourceNotFoundException("Warehouse not found with id: " + id);
         }
+
+        PageRequest batch = PageRequest.of(0, 100);
+
+        Page<Sector> sectorPage;
+        do {
+            sectorPage = sectorRepository.findByWarehouseId(id, batch);
+            sectorPage.forEach(sector -> {
+                Page<MovementOrder> orderPage;
+                do {
+                    orderPage = orderRepository
+                            .findByOriginSectorIdOrDestinationSectorId(sector.getId(), sector.getId(), batch);
+                    orderRepository.deleteAll(orderPage.getContent());
+                } while (orderPage.hasNext());
+            });
+            sectorRepository.deleteAll(sectorPage.getContent());
+        } while (sectorPage.hasNext());
+
+        Page<Product> productPage;
+        do {
+            productPage = productRepository.findByWarehouseId(id, batch);
+            productRepository.deleteAll(productPage.getContent());
+        } while (productPage.hasNext());
+
+        Page<User> userPage;
+        do {
+            userPage = userRepository.findByWarehouseId(id, batch);
+            userRepository.deleteAll(userPage.getContent());
+        } while (userPage.hasNext());
+
         warehouseRepository.deleteById(id);
         log.info("Warehouse deleted: id={}", id);
     }

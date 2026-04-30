@@ -2,16 +2,20 @@ package com.flowline.flowline.service;
 
 import com.flowline.flowline.dto.*;
 import com.flowline.flowline.exception.ResourceNotFoundException;
+import com.flowline.flowline.model.MovementOrder;
 import com.flowline.flowline.model.Sector;
 import com.flowline.flowline.model.User;
 import com.flowline.flowline.model.Warehouse;
+import com.flowline.flowline.repository.OrderRepository;
 import com.flowline.flowline.repository.SectorRepository;
 import com.flowline.flowline.repository.UserRepository;
 import com.flowline.flowline.repository.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
 
 @Service
@@ -22,6 +26,7 @@ public class SectorService {
     private final UserRepository userRepository;
     private final WarehouseRepository warehouseRepository;
     private final SectorRepository sectorRepository;
+    private final OrderRepository orderRepository;
 
     private record SectorDependencies(
             Warehouse warehouse,
@@ -112,12 +117,22 @@ public class SectorService {
         return result;
     }
 
+    @Transactional
     public void deleteById(Long id) {
         log.info("Deleting sector by id: {}", id);
         if (!sectorRepository.existsById(id)) {
             log.warn("Sector not found for deletion: id={}", id);
             throw new ResourceNotFoundException("Sector not found with id: " + id);
         }
+
+        PageRequest batch = PageRequest.of(0, 100);
+        Page<MovementOrder> orderPage;
+        do {
+            orderPage = orderRepository
+                    .findByOriginSectorIdOrDestinationSectorId(id, id, batch);
+            orderRepository.deleteAll(orderPage.getContent());
+        } while (orderPage.hasNext());
+
         sectorRepository.deleteById(id);
         log.info("Sector deleted: id={}", id);
     }

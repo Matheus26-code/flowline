@@ -2,9 +2,12 @@ package com.flowline.flowline.repository;
 
 import com.flowline.flowline.model.MovementOrder;
 import com.flowline.flowline.model.MovementStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface OrderRepository extends JpaRepository<MovementOrder, Long> {
 
@@ -14,4 +17,8 @@ public interface OrderRepository extends JpaRepository<MovementOrder, Long> {
             MovementStatus status,
             LocalDateTime start,
             LocalDateTime end);
+    List<MovementOrder> findByOriginSectorIdOrDestinationSectorId(
+            Long originId, Long destinationId);
+    Page<MovementOrder> findByOriginSectorIdOrDestinationSectorId(
+            Long originId, Long destinationId, Pageable pageable);
 }

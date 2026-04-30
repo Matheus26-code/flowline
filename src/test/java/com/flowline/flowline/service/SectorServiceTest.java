@@ -7,6 +7,7 @@ import com.flowline.flowline.exception.ResourceNotFoundException;
 import com.flowline.flowline.model.Sector;
 import com.flowline.flowline.model.User;
 import com.flowline.flowline.model.Warehouse;
+import com.flowline.flowline.repository.OrderRepository;
 import com.flowline.flowline.repository.SectorRepository;
 import com.flowline.flowline.repository.UserRepository;
 import com.flowline.flowline.repository.WarehouseRepository;
@@ -44,6 +45,9 @@ public class SectorServiceTest {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    OrderRepository orderRepository;
 
     @InjectMocks
     SectorService sectorService;
@@ -128,7 +132,12 @@ public class SectorServiceTest {
     @Test
     public void mustDeleteSectorById() {
         when(sectorRepository.existsById(1L)).thenReturn(true);
+        when(orderRepository.findByOriginSectorIdOrDestinationSectorId(1L, 1L))
+                .thenReturn(Collections.emptyList());
+
         sectorService.deleteById(1L);
+
+        verify(orderRepository).deleteAll(Collections.emptyList());
         verify(sectorRepository).deleteById(1L);
     }
 }

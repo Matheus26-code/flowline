@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SoftDelete;
 
 @Entity
 @Table(name="warehouse")
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
+@SoftDelete
 public class Warehouse {
 
     @Id
