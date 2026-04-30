@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -160,9 +161,9 @@ public class WarehouseServiceTest {
     @Test
     public void mustDeleteWarehouseById() {
         when(warehouseRepository.existsById(1L)).thenReturn(true);
-        when(sectorRepository.findByWarehouseId(1L)).thenReturn(Collections.emptyList());
-        when(productRepository.findByWarehouseId(1L)).thenReturn(Collections.emptyList());
-        when(userRepository.findByWarehouseId(1L)).thenReturn(Collections.emptyList());
+        when(sectorRepository.findByWarehouseId(eq(1L), any(Pageable.class))).thenReturn(Page.empty());
+        when(productRepository.findByWarehouseId(eq(1L), any(Pageable.class))).thenReturn(Page.empty());
+        when(userRepository.findByWarehouseId(eq(1L), any(Pageable.class))).thenReturn(Page.empty());
 
         warehouseService.deleteById(1L);
 

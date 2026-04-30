@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -132,8 +133,8 @@ public class SectorServiceTest {
     @Test
     public void mustDeleteSectorById() {
         when(sectorRepository.existsById(1L)).thenReturn(true);
-        when(orderRepository.findByOriginSectorIdOrDestinationSectorId(1L, 1L))
-                .thenReturn(Collections.emptyList());
+        when(orderRepository.findByOriginSectorIdOrDestinationSectorId(eq(1L), eq(1L), any(Pageable.class)))
+                .thenReturn(Page.empty());
 
         sectorService.deleteById(1L);
 
