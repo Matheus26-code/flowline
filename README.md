@@ -2,9 +2,13 @@
 
 > **Real-time material flow visibility for factories and warehouses**
 
-FlowLine is a B2B SaaS back-end platform that enables industrial operations teams to track, manage, and monitor internal material movement across sectors — bringing transparency to the factory floor.
+FlowLine is a B2B SaaS back-end platform that enables industrial
+operations teams to track, manage, and monitor internal material
+movement across sectors — bringing transparency to the factory floor.
 
-Built from a real operational background in automotive manufacturing (GKN Automotive), FlowLine solves a genuine problem: the lack of visibility into who moved what, where, and when.
+Built from a real operational background in automotive manufacturing
+(GKN Automotive), FlowLine solves a genuine problem: the lack of
+visibility into who moved what, where, and when.
 
 ---
 
@@ -12,7 +16,8 @@ Built from a real operational background in automotive manufacturing (GKN Automo
 
 **Base URL:** `https://flowline-nf81.onrender.com`
 
-> ⚠️ Hosted on Render free tier — the first request may take up to 50 seconds to wake the service.
+> ⚠️ Hosted on Render free tier — the first request may take up
+> to 50 seconds to wake the service.
 
 ### Quick test via curl
 
@@ -36,7 +41,7 @@ curl -X POST https://flowline-nf81.onrender.com/api/auth/login \
 | Framework | Spring Boot 3.5 |
 | Security | Spring Security + JWT (JJWT 0.12.6) |
 | Database | PostgreSQL 16 |
-| ORM | Spring Data JPA + Hibernate |
+| ORM | Spring Data JPA + Hibernate 6 |
 | Migrations | Flyway |
 | Containerization | Docker + Docker Compose |
 | Build Tool | Gradle |
@@ -48,9 +53,8 @@ curl -X POST https://flowline-nf81.onrender.com/api/auth/login \
 
 ## 🏗️ Architecture
 
-This project follows a **layered architecture** with clear separation of concerns:
-
-```
+This project follows a **layered architecture** with clear
+separation of concerns:
 com.flowline.flowline
 ├── config          # Spring Security configuration
 ├── controller      # HTTP layer — receives requests, delegates to service
@@ -61,35 +65,40 @@ com.flowline.flowline
 ├── repository      # Data access layer — communicates with the database
 ├── security        # JWT filter, token service, UserDetails implementation
 └── service         # Business logic layer — rules and orchestration
-```
 
 **Key architectural decisions:**
 
-- **Constructor injection** over field injection — enforces immutability and improves testability
-- **DTO pattern** — decouples API contracts from database entities, preventing over-exposure
+- **Constructor injection** over field injection — enforces immutability
+  and improves testability
+- **DTO pattern** — decouples API contracts from database entities,
+  preventing over-exposure
 - **Records for DTOs** — immutable by design, no boilerplate needed
-- **Flyway migrations** — versioned schema management, safe for production environments
-- **Spring Profiles** — separate configurations for `dev` and `prod` environments
-- **JWT stateless authentication** — no server-side session storage, horizontally scalable
-- **Bean Validation** — input validation on all request DTOs with meaningful error responses
+- **Flyway migrations** — versioned schema management, safe for
+  production environments
+- **Spring Profiles** — separate configurations for `dev` and `prod`
+- **JWT stateless authentication** — no server-side session storage,
+  horizontally scalable
+- **Bean Validation** — input validation on all request DTOs with
+  meaningful error responses
+- **Soft Delete** — all entities use `@SoftDelete` (Hibernate 6),
+  preserving data for auditing instead of physically removing records
+- **Cascade Soft Delete** — deleting a Warehouse cascades to all child
+  Sectors, Products, Users and Movement Orders in batches of 100,
+  wrapped in a single `@Transactional` to guarantee consistency
 
 ---
 
 ## 📊 Domain Model
-
-```
 Warehouse (root entity — represents a company/factory)
 └── Sector       (physical area within the warehouse)
 └── Product      (material catalog, per warehouse)
 └── User         (operator, manager, or admin)
-
-MovementOrder      (tracks material movement between sectors)
+MovementOrder  (tracks material movement between sectors)
 └── originSector
 └── destinationSector
 └── product
 └── createdBy (User)
 └── status: PENDING | DELIVERING | DELIVERED | CANCELLED
-```
 
 ---
 
@@ -107,7 +116,7 @@ MovementOrder      (tracks material movement between sectors)
 | `GET` | `/api/warehouse` | List all warehouses (paginated) |
 | `GET` | `/api/warehouse/{id}` | Find warehouse by ID |
 | `PUT` | `/api/warehouse/{id}` | Update warehouse |
-| `DELETE` | `/api/warehouse/{id}` | Delete warehouse |
+| `DELETE` | `/api/warehouse/{id}` | Soft delete warehouse + cascade |
 
 ### User
 | Method | Endpoint | Description |
@@ -116,7 +125,7 @@ MovementOrder      (tracks material movement between sectors)
 | `GET` | `/api/user` | List all users (paginated) |
 | `GET` | `/api/user/{id}` | Find user by ID |
 | `PUT` | `/api/user/{id}` | Update user |
-| `DELETE` | `/api/user/{id}` | Delete user |
+| `DELETE` | `/api/user/{id}` | Soft delete user |
 
 ### Sector
 | Method | Endpoint | Description |
@@ -125,7 +134,7 @@ MovementOrder      (tracks material movement between sectors)
 | `GET` | `/api/sector` | List all sectors (paginated) |
 | `GET` | `/api/sector/{id}` | Find sector by ID |
 | `PUT` | `/api/sector/{id}` | Update sector |
-| `DELETE` | `/api/sector/{id}` | Delete sector |
+| `DELETE` | `/api/sector/{id}` | Soft delete sector + cascade orders |
 
 ### Product
 | Method | Endpoint | Description |
@@ -134,7 +143,7 @@ MovementOrder      (tracks material movement between sectors)
 | `GET` | `/api/product` | List all products (paginated) |
 | `GET` | `/api/product/{id}` | Find product by ID |
 | `PUT` | `/api/product/{id}` | Update product |
-| `DELETE` | `/api/product/{id}` | Delete product |
+| `DELETE` | `/api/product/{id}` | Soft delete product |
 
 ### Movement Orders
 | Method | Endpoint | Description |
@@ -143,20 +152,21 @@ MovementOrder      (tracks material movement between sectors)
 | `GET` | `/api/orders` | List all orders (paginated) |
 | `GET` | `/api/orders/{id}` | Find order by ID |
 | `PUT` | `/api/orders/{id}` | Update order |
-| `DELETE` | `/api/orders/{id}` | Delete order |
+| `DELETE` | `/api/orders/{id}` | Soft delete order |
 
 ### Dashboard
 | Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| `GET` | `/api/dashboard` | Aggregated operational metrics | ADMIN, MANAGE |
+| `GET` | `/api/dashboard` | Aggregated operational metrics | All roles |
 
 ### AI Assistant
 | Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| `POST` | `/api/chat` | Query operational data via natural language | ADMIN, MANAGE |
+| `POST` | `/api/chat` | Query operational data via natural language | All roles |
 
 **Dashboard response includes:**
-- Total orders and breakdown by status (PENDING, DELIVERING, DELIVERED, CANCELLED)
+- Total orders and breakdown by status
+  (PENDING, DELIVERING, DELIVERED, CANCELLED)
 - Orders created today
 - Products delivered today
 - Total products and users registered
@@ -164,13 +174,10 @@ MovementOrder      (tracks material movement between sectors)
 ---
 
 ## 🔐 Authentication Flow
-
-```
 POST /api/auth/login → { email, password }
 Server returns       → { token: "eyJhbGci..." }
 Include in requests  → Authorization: Bearer <token>
 Token expires after 24 hours
-```
 
 ### User Roles
 | Role | Description |
@@ -235,7 +242,8 @@ Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 
 ## 🗄️ Database Schema
 
-Managed by Flyway. Migrations located at `src/main/resources/db/migration/`.
+Managed by Flyway. Migrations located at
+`src/main/resources/db/migration/`.
 
 | Version | Description |
 |---|---|
@@ -244,6 +252,8 @@ Managed by Flyway. Migrations located at `src/main/resources/db/migration/`.
 | V3 | Create sector table |
 | V4 | Create product table |
 | V5 | Create movement order table |
+| V6 | Seed demo data (GKN Automotive) |
+| V7 | Add `deleted` column to all tables (Soft Delete) |
 
 ---
 
@@ -262,14 +272,15 @@ Managed by Flyway. Migrations located at `src/main/resources/db/migration/`.
 | `DB_USERNAME` | Database username |
 | `DB_PASSWORD` | Database password |
 | `JWT_SECRET` | Secret key for signing JWT tokens (min 256 bits) |
-| `JWT_EXPIRATION` | Token expiration in milliseconds (e.g. `86400000` = 24h) |
+| `JWT_EXPIRATION` | Token expiration in milliseconds (`86400000` = 24h) |
 | `ANTHROPIC_API_KEY` | API key for Claude AI integration |
 
 ---
 
 ## 🧪 Testing
 
-This project includes **unit tests** for the service layer and **integration tests** for the controller layer.
+This project includes **unit tests** for the service layer and
+**integration tests** for the controller layer.
 
 ### Running the tests
 
@@ -277,23 +288,41 @@ This project includes **unit tests** for the service layer and **integration tes
 ./gradlew test
 ```
 
-### Unit test coverage
+### Test coverage
+
+**Unit tests — Service layer (Mockito)**
 
 | Service | Tests |
 |---|---|
-| WarehouseService | 6 tests |
+| WarehouseService | 8 tests |
 | ProductService | 6 tests |
 | SectorService | 6 tests |
 | UserService | 6 tests |
 | MovementOrderService | 6 tests |
-| **Total** | **30 tests** |
+| **Subtotal** | **32 tests** |
+
+**Integration tests — Controller layer (MockMvc + H2)**
+
+| Controller | Tests |
+|---|---|
+| AuthController | 4 tests |
+| WarehouseController | 4 tests |
+| UserController | 5 tests |
+| SectorController | 5 tests |
+| ProductController | 5 tests |
+| MovementOrderController | 5 tests |
+| DashboardController | 2 tests |
+| **Subtotal** | **30 tests** |
+
+**Total: 65 tests — 0 failures**
 
 **Patterns applied:**
 - `@ExtendWith(MockitoExtension.class)` for isolated unit tests
-- `@Mock` for repository dependencies
-- `@InjectMocks` for the service under test
-- `@BeforeEach` for shared test fixtures
-- `assertThrows` for exception scenario coverage
+- `@Mock` / `@InjectMocks` for dependency isolation
+- `@SpringBootTest` + `@AutoConfigureMockMvc` for integration tests
+- `@Transactional` for automatic rollback after each integration test
+- H2 in-memory database with PostgreSQL compatibility mode
+- `assertThrows` for exception coverage
 - `verify` for void method behavior validation
 
 ---
@@ -309,4 +338,5 @@ This project includes **unit tests** for the service layer and **integration tes
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is open source and available under the
+[MIT License](LICENSE).
