@@ -63,8 +63,8 @@ public class SectorService {
         sector.setName(request.name());
         sector.setDescription(request.description());
         sector.setBuilding(request.building());
-        sector.setWarehouse(deps.warehouse);
         sector.setResponsible(deps.user);
+        sector.setWarehouse(deps.warehouse);
         SectorResponseDTO result = toResponse(sectorRepository.save(sector));
         log.info("Sector created successfully: id={}, name={}",
                 result.id(), result.name());
@@ -108,8 +108,8 @@ public class SectorService {
         sector.setName(request.name());
         sector.setDescription(request.description());
         sector.setBuilding(request.building());
-        sector.setWarehouse(deps.warehouse);
         sector.setResponsible(deps.user);
+        sector.setWarehouse(deps.warehouse);
         SectorResponseDTO result = toResponse(sectorRepository.save(sector));
 
         log.info("Sector updated successfully: id={}, name={}",
