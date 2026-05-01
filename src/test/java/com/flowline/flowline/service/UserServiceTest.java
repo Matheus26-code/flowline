@@ -3,6 +3,7 @@ package com.flowline.flowline.service;
 import com.flowline.flowline.dto.PageResponseDTO;
 import com.flowline.flowline.dto.UserRequestDTO;
 import com.flowline.flowline.dto.UserResponseDTO;
+import com.flowline.flowline.exception.ForbiddenAccessException;
 import com.flowline.flowline.exception.ResourceNotFoundException;
 import com.flowline.flowline.model.User;
 import com.flowline.flowline.model.UserRole;
@@ -33,6 +34,7 @@ public class UserServiceTest {
 
     private Warehouse warehouse;
     private User user;
+    private User loggedAdmin;
     private UserRequestDTO userRequestDTO;
 
 
@@ -51,6 +53,11 @@ public class UserServiceTest {
         warehouse = new Warehouse();
         warehouse.setId(1L);
         warehouse.setName("test");
+
+        loggedAdmin = new User();
+        loggedAdmin.setId(99L);
+        loggedAdmin.setRole(UserRole.ADMIN);
+        loggedAdmin.setWarehouse(warehouse);
 
         user = new User();
         user.setId(1L);
@@ -72,7 +79,7 @@ public class UserServiceTest {
         when(warehouseRepository.findById(warehouse.getId())).thenReturn(Optional.of(warehouse));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        UserResponseDTO result = userService.createUser(userRequestDTO);
+        UserResponseDTO result = userService.createUser(userRequestDTO, loggedAdmin); // + loggedAdmin
 
         assertNotNull(result);
         assertEquals("User mock", result.username());
@@ -116,8 +123,7 @@ public class UserServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        UserResponseDTO result = userService.updateUser(1L, userRequestDTO);
-
+        UserResponseDTO result = userService.updateUser(1L, userRequestDTO, loggedAdmin);
         assertNotNull(result);
         assertEquals("User mock", result.username());
     }
@@ -127,5 +133,22 @@ public class UserServiceTest {
         when(userRepository.existsById(1L)).thenReturn(true);
         userService.deleteUser(1L);
         verify(userRepository).deleteById(1L);
+    }
+
+    @Test
+    public void mustThrowForbiddenWhenManageTriesToCreateAdmin() {
+        User loggedManage = new User();
+        loggedManage.setRole(UserRole.MANAGE);
+        loggedManage.setWarehouse(warehouse);
+
+        UserRequestDTO requestWithAdminRole = new UserRequestDTO(
+                "User mock", "email mock", "Password mock",
+                UserRole.ADMIN, warehouse.getId()
+        );
+
+        assertThrows(
+                ForbiddenAccessException.class,
+                () -> userService.createUser(requestWithAdminRole, loggedManage)
+        );
     }
 }

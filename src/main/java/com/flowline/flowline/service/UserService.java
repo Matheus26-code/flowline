@@ -3,8 +3,10 @@ package com.flowline.flowline.service;
 import com.flowline.flowline.dto.PageResponseDTO;
 import com.flowline.flowline.dto.UserResponseDTO;
 import com.flowline.flowline.dto.UserRequestDTO;
+import com.flowline.flowline.exception.ForbiddenAccessException;
 import com.flowline.flowline.exception.ResourceNotFoundException;
 import com.flowline.flowline.model.User;
+import com.flowline.flowline.model.UserRole;
 import com.flowline.flowline.model.Warehouse;
 import com.flowline.flowline.repository.UserRepository;
 import com.flowline.flowline.repository.WarehouseRepository;
@@ -44,10 +46,15 @@ public class UserService {
                 user.getWarehouse().getId());
     }
 
-    public UserResponseDTO createUser(UserRequestDTO request) {
+    public UserResponseDTO createUser(UserRequestDTO request, User loggedUser) {
         log.info("Creating user: {}", request);
+        if (loggedUser.getRole() == UserRole.MANAGE) {
+            if (request.role() == UserRole.ADMIN || request.role() == UserRole.MANAGE) {
+                throw new ForbiddenAccessException(
+                        "Managers can only create OPERATOR or ASSISTANT users");
+            }
+        }
         UserDependecies deps = resolveDependecies(request);
-
         User user = new User();
         user.setUsername(request.username());
         user.setEmail(request.email());
@@ -85,9 +92,15 @@ public class UserService {
         );
     }
 
-    public UserResponseDTO updateUser(Long id, UserRequestDTO request) {
+    public UserResponseDTO updateUser(Long id, UserRequestDTO request, User loggedUser) {
         log.info("Updating user: {}", request);
         UserDependecies deps = resolveDependecies(request);
+        if (loggedUser.getRole() == UserRole.MANAGE) {
+            if (request.role() == UserRole.ADMIN || request.role() == UserRole.MANAGE) {
+                throw new ForbiddenAccessException(
+                        "Managers can only create OPERATOR or ASSISTANT users");
+            }
+        }
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         user.setUsername(request.username());
